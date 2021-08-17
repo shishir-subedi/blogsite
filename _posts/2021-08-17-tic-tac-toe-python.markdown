@@ -167,6 +167,7 @@ Lets take an example, suppose we are checking the row win condition. The win_row
 
 Suppose the game state of the board is as follow
 
+{% highlight python %}
 +-----------+
 | X |   | X |
 +-----------+
@@ -174,6 +175,7 @@ Suppose the game state of the board is as follow
 +-----------+
 | X | O | X |
 +-----------+
+{% endhighlight %}
 
 As we can see row win condition is satisfied in the second row. If we run loop through rows and columns for mark O (i.e. CPU mark and internal representation value of 2). First row doesn't contain any CPU mark so first index value of win_row_column variable will be as it is (i.e. 0). When the loop continues for the second row and first column the internal value is 2 as it is represented by mark O so 1 is added to the 2nd index value of win_row_column (0+1=1). Again for the second column, the mark is again O so again value 1 is added in the same row index value of win_row_column (1+1=2). Same case for third column of second row of matrix. Where as for the third row it is only 1 because there is only one O mark in that row. 
 
