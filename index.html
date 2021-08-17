@@ -55,7 +55,7 @@ title: Home
         <div class="offset-md-1 col-md-10">
           <div class="row">
             <div class="offset-md-1 col-md-4 pt-4 text-center">
-              <img src="{{ site.baseurl}}/static/img/about/shishir2.jpg" class="img-fluid rounded-circle wow pulse animated"
+              <img src="{{ site.url}}{{ site.baseurl}}/static/img/about/shishir2.jpg" class="img-fluid rounded-circle wow pulse animated"
                 data-wow-iteration="infinite" data-wow-duration="8s" style="width: 80%" />
             </div>
             <div class="offset-md-1 col-md-6 pt-4">
@@ -450,7 +450,7 @@ title: Home
             <div class="row row-cols-1 row-cols-md-3 g-4">
               <div class="col">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.baseurl}}/static/img/projects/institute.png" class="card-img-top" alt="Institute App">
+                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/institute.png" class="card-img-top" alt="Institute App">
                   <div class="card-body">
                     <h5 class="card-title">Institute App</h5>
                     <p class="card-text">A native mobile app for student where student can read newsletters, can
@@ -460,7 +460,7 @@ title: Home
               </div>
               <div class="col">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.baseurl}}/static/img/projects/blog.png" class="card-img-top" alt="Personal Blog">
+                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/blog.png" class="card-img-top" alt="Personal Blog">
                   <div class="card-body">
                     <h5 class="card-title">Personal Blog Site</h5>
                     <p class="card-text">
@@ -471,7 +471,7 @@ title: Home
               </div>
               <div class="col">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.baseurl}}/static/img/projects/quiz.png" class="card-img-top" alt="Quiz App">
+                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/quiz.png" class="card-img-top" alt="Quiz App">
                   <div class="card-body">
                     <h5 class="card-title">Quiz App</h5>
                     <p class="card-text">
@@ -482,7 +482,7 @@ title: Home
               </div>
               <div class="col">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.baseurl}}/static/img/projects/care.png" class="card-img-top" alt="AgedCare">
+                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/care.png" class="card-img-top" alt="AgedCare">
                   <div class="card-body">
                     <h5 class="card-title">AgedCare</h5>
                     <p class="card-text">A web app for a aged care where user with different roles (Doctor, Nurse,
@@ -492,7 +492,7 @@ title: Home
               </div>
               <div class="col">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.baseurl}}/static/img/projects/AOAS.png" class="card-img-top" alt="Static Website">
+                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/AOAS.png" class="card-img-top" alt="Static Website">
                   <div class="card-body">
                     <h5 class="card-title">Static Website</h5>
                     <p class="card-text">A static website for a decor shop made with HTML5/CSS3/JS and using
@@ -502,7 +502,7 @@ title: Home
               </div>
               <div class="col">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.baseurl}}/static/img/projects/confidential.png" class="card-img-top" alt="Confidential App">
+                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/confidential.png" class="card-img-top" alt="Confidential App">
                   <div class="card-body">
                     <h5 class="card-title">Confidential App</h5>
                     <p class="card-text">No additional information to disclose.</p>
@@ -532,9 +532,9 @@ title: Home
             <div class="row row-cols-1 row-cols-md-3 g-4 card-container">
               {% for post in site.posts limit:6 %}
               <div class="col blog-card">
-                <a href="{{ site.baseurl}}{{ post.url }}" class="blog-link">
+                <a href="{{ site.url}}{{ site.baseurl}}{{ post.url }}" class="blog-link">
                   <div class="card bg-dark custom-card blog-card">
-                    <img src="{{ site.baseurl}}{{ post.image_path }}" class="card-img-top" alt="{{ post.title }}">
+                    <img src="{{ site.url}}{{ site.baseurl}}{{ post.image_path }}" class="card-img-top" alt="{{ post.title }}">
                     <div class="card-body">
                       <h5 class="card-title">{{ post.title }}</h5>
                       <hr class="mx-auto" />
@@ -546,7 +546,7 @@ title: Home
               {% endfor %}
             </div>
             <div class="col-md-12 mt-3">
-              <a class="btn btn-sm btn-info pull-right" href="{{ site.baseurl }}/blogs">More...</a>
+              <a class="btn btn-sm btn-info pull-right" href="{{ site.url}}{{ site.baseurl }}/blogs">More...</a>
             </div>
           </div>
         </div>

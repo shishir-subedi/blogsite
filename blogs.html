@@ -20,9 +20,9 @@
             <div class="row row-cols-1 row-cols-md-3 g-4 card-container">
               {% for post in site.posts %}
               <div class="col blog-card">
-                <a href="{{ site.baseurl}}{{ post.url }}" class="blog-link">
+                <a href="{{ site.url}}{{ site.baseurl}}{{ post.url }}" class="blog-link">
                   <div class="card bg-dark custom-card blog-card">
-                    <img src="{{ site.baseurl}}{{ post.image_path }}" class="card-img-top" alt="{{ post.title }}">
+                    <img src="{{ site.url}}{{ site.baseurl}}{{ post.image_path }}" class="card-img-top" alt="{{ post.title }}">
                     <div class="card-body">
                       <h5 class="card-title">{{ post.title }}</h5>
                       <h6>{{ post.date | date: "%d %B %Y" }}</h6>

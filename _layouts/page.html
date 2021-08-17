@@ -10,7 +10,7 @@ comments: true
   <div class="wow fadeIn animated" data-wow-delay="0.4s">
     <div class="container">
       <div class="row py-3">
-        <image class="img-fluid py-2" id="single-blog-image" src="{{ site.baseurl}}{{ page.image_path }}"></image>
+        <image class="img-fluid py-2" id="single-blog-image" src="{{ site.url}}{{ site.baseurl}}{{ page.image_path }}"></image>
         <div class="text-center content-title">
           <h3 class="my-2" id="single-blog-title">{{ page.title }}</h3>
           <!-- <div class="mx-auto title-underline"></div> -->
@@ -19,7 +19,7 @@ comments: true
         <p class="py-3" id="single-blog-content">{{ page.content }}</p>
       </div>
       {% include  share.html %}
-      <a href="{{ site.baseurl}}{{page.url}}#disqus_thread">Link</a>
+      <a href="{{ site.url}}{{ site.baseurl}}{{page.url}}#disqus_thread">Link</a>
       {% if site.disqus.shortname %}
         {% include disqus_comments.html %}
       {% endif %}
