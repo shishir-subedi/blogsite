@@ -24,9 +24,8 @@ description: >- # this means to ignore newlines until "baseurl:"
   Hi! I'm Shishir Subedi and I'm a freelance software engineer. Currently
   I'm pursuing masters in computer engineering specialization in Data science
   and analytics at Institute of Engineering Pulchowk Campus.
-#url: "https://shishir-subedi.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-#baseurl: "/blogsite" # the subpath of your site, e.g. /blog
-baseurl: ""
+url: "https://shishir-subedi.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/blogsite" # the subpath of your site, e.g. /blog
 twitter_username: _shishir_subedi
 github_username:  shishir-subedi
 author:
