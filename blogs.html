@@ -20,7 +20,7 @@
             <div class="row row-cols-1 row-cols-md-3 g-4 card-container">
               {% for post in site.posts %}
               <div class="col blog-card">
-                <a href="{{ site.url}}{{ site.baseurl}}{{ post.url }}" class="blog-link">
+                <a href="{{ post.url }}" class="blog-link">
                   <div class="card bg-dark custom-card blog-card">
                     <img src="{{ site.url}}{{ site.baseurl}}{{ post.image_path }}" class="card-img-top" alt="{{ post.title }}">
                     <div class="card-body">
