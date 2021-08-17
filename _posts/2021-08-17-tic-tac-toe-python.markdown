@@ -167,7 +167,7 @@ Lets take an example, suppose we are checking the row win condition. The win_row
 
 Suppose the game state of the board is as follow
 
-{% highlight python %}
+{% highlight html %}
 +-----------+
 | X |   | X |
 +-----------+
