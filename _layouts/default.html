@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+{% seo %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Shishir Subedi" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/png" sizes="32x32" href="{{ site.baseurl}}/static/img/favicon/favicon-32x32.png" />
+  <link rel="shortcut icon" type="image/png" sizes="16x16" href="{{ site.baseurl}}/static/img/favicon/favicon-16x16.png" />
+  <title>{{ page.title }} | {{ site.title }}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{{ site.baseurl}}/static/vendor/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="{{ site.baseurl}}/static/vendor/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="{{ site.baseurl}}/static/vendor/animate/css/animate.css" />
+  <link rel="stylesheet" href="{{ site.baseurl}}/static/css/style.css" />
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="40" class="bg-dark text-white">
+  <!-- Preloader -->
+  <div id="preloader">
+    <div id="status"></div>
+  </div>
+  <!--End Preloader-->
+
+  {{ content }}
+
+  <a id="back-to-top" class="btn btn-sm smooth-scroll hidden-sm hidden-xs wow bounceInDown" role="button">
+    <i class="fa fa-chevron-up"></i>
+  </a>
+  <script src="{{ site.baseurl}}/static/vendor/jquery/js/jquery-3.3.min.js"></script>
+  <script src="{{ site.baseurl}}/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="{{ site.baseurl}}/static/vendor/wow/js/wow.min.js"></script>
+  <script src="{{ site.baseurl}}/static/vendor/waypoints/js/jquery.waypoints.min.js"></script>
+  <script src="{{ site.baseurl}}/static/js/script.js"></script>
+  <script>
+    wow = new WOW({
+      boxClass: "wow", // default
+      animateClass: "animated", // default
+      offset: 0, // default
+      mobile: true, // default is true
+      live: true, // default
+    });
+    wow.init();
+  </script>
+  <script id="dsq-count-scr" src="//shishirsubedi.disqus.com/count.js" async></script>
+</body>
+
+</html>

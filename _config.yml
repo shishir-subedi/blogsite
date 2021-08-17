@@ -1,0 +1,81 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+#
+# If you need help with YAML syntax, here are some quick references for you: 
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+
+title: Shishir's Blog Site
+tagline: A jekyll powered blog site
+description: >- # this means to ignore newlines until "baseurl:"
+  Hi! I'm Shishir Subedi and I'm a freelance software engineer. Currently
+  I'm pursuing masters in computer engineering specialization in Data science
+  and analytics at Institute of Engineering Pulchowk Campus.
+url: "https://shishir-subedi.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/blogsite" # the subpath of your site, e.g. /blog
+twitter_username: _shishir_subedi
+github_username:  shishir-subedi
+author:
+  twitter: _shishir_subedi
+twitter:
+  username: _shishir_subedi
+  card: summary
+social:
+  name: Shishir Subedi
+  links:
+    - https://twitter.com/_shishir_subedi
+    - https://www.facebook.com/shishir.subedi1
+    - https://www.linkedin.com/in/shishir-subedi
+    - https://github.com/ccir41
+webmaster_verifications:
+  google: DYuFXBmC_p9rUwMiI-IaOfnt1c9E8Y6HWzE5vyOdZIk
+
+# Disqus Comments
+disqus:
+  # Leave shortname blank to disable comments site-wide.
+  # Disable comments for any post by adding `comments: false` to that post's YAML Front Matter.
+  shortname: shishirsubedi
+markdown: kramdown
+highlighter: rouge
+kramdown: 
+  syntax_highlighter: rouge
+  input: GFM
+
+# Build settings
+# theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+# exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules/
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/

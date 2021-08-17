@@ -1,0 +1,14 @@
+# local run
+bundle exec jekyll serve --livereload
+jekyll serve
+
+# thinks to make changes
+
+1. SEO
+2. Pagination
+3. Function to Share post to social media
+4. Disques Comment
+5. Categories Filter
+
+# To build your Jekyll site in production environment use the following command.
+    JEKYLL_ENV=production bundle exec jekyll build

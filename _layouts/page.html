@@ -1,0 +1,31 @@
+---
+layout: default
+comments: true
+---
+
+{% include page_header.html %}
+
+<!-- Blogs -->
+<section class="py-5">
+  <div class="wow fadeIn animated" data-wow-delay="0.4s">
+    <div class="container">
+      <div class="row py-3">
+        <image class="img-fluid py-2" id="single-blog-image" src="{{ site.baseurl}}{{ page.image_path }}"></image>
+        <div class="text-center content-title">
+          <h3 class="my-2" id="single-blog-title">{{ page.title }}</h3>
+          <!-- <div class="mx-auto title-underline"></div> -->
+          <h6 class="mt-2">{{ page.date | date: "%d %B %Y" }}</h6>
+        </div>
+        <p class="py-3" id="single-blog-content">{{ page.content }}</p>
+      </div>
+      {% include  share.html %}
+      <a href="{{ site.baseurl}}{{page.url}}#disqus_thread">Link</a>
+      {% if site.disqus.shortname %}
+        {% include disqus_comments.html %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+<!-- End Blogs -->
+
+{% include footer.html %}
