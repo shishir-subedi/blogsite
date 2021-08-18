@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="h-100">
-{% seo %}
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="author" content="Shishir Subedi" />
+
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/png" sizes="32x32" href="{{ site.url}}{{ site.baseurl}}/static/img/favicon/favicon-32x32.png" />
   <link rel="shortcut icon" type="image/png" sizes="16x16" href="{{ site.url}}{{ site.baseurl}}/static/img/favicon/favicon-16x16.png" />
@@ -16,6 +15,14 @@
   <link rel="stylesheet" href="{{ site.url}}{{ site.baseurl}}/static/vendor/font-awesome/css/font-awesome.min.css" />
   <link rel="stylesheet" href="{{ site.url}}{{ site.baseurl}}/static/vendor/animate/css/animate.css" />
   <link rel="stylesheet" href="{{ site.url}}{{ site.baseurl}}/static/css/style.css" />
+  <!-- Addition meta for SEO -->
+  <meta property="og:image" content="{{ site.url }}{{ site.baseurl}}{{ page.image }}" />
+  <meta property="article:publisher" content="https://www.facebook.com/shishir.subedi1" />
+  <meta property="article:author" content="https://www.facebook.com/shishir.subedi1" />
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <!-- End Addition meta tags -->
+  {% seo %}
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="40" class="bg-dark text-white">
