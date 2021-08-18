@@ -30,3 +30,6 @@ gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 
 # for seo 
 gem 'jekyll-seo-tag'
+
+# for sitemap
+gem 'jekyll-sitemap'
