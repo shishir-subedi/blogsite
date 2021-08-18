@@ -2,7 +2,7 @@
 layout: page
 image_path: /static/img/blogs/TicTacToe.png
 title:  "Tic Tac Toe in Python"
-permalink: "/blogs/tic-toc-toe-python"
+permalink: "/blogs/tic-tac-toe-python"
 date:   2021-08-17 16:10:52 +0545
 description: "Our famous childhood game we used to play when we see small piece of blank paper. In this game, our opposition i.e. CPU will use never lose strategy. i.e The game will either ends up in favor of CPU or Draw."
 categories: Python AI Game
