@@ -10,16 +10,18 @@ comments: true
   <div class="wow fadeIn animated" data-wow-delay="0.4s">
     <div class="container">
       <div class="row py-3">
-        <image class="img-fluid py-2" id="single-blog-image" src="{{ site.url}}{{ site.baseurl}}{{ page.image_path }}"></image>
+        <image class="img-fluid py-2" src="{{ site.url}}{{ site.baseurl}}{{ page.image_path }}"></image>
         <div class="text-center content-title">
-          <h3 class="my-2" id="single-blog-title">{{ page.title }}</h3>
+          <div class="mt-3">
+            <h3 class="d-inline-block">{{ page.title }}</h3>
+            &nbsp;&nbsp;&nbsp;&nbsp;<h6 class="d-inline-block font-monospace">{{ page.date | date: "%d %B %Y" }}</h6>
+          </div>
           <!-- <div class="mx-auto title-underline"></div> -->
-          <h6 class="mt-2">{{ page.date | date: "%d %B %Y" }}</h6>
         </div>
-        <p class="py-3" id="single-blog-content">{{ page.content }}</p>
+        <p id="single-blog-content">{{ page.content }}</p>
       </div>
       {% include  share.html %}
-      <a href="{{ site.url}}{{ site.baseurl}}{{page.url}}#disqus_thread">Link</a>
+      <!-- <a class="d-inline-block text-white" href="{{ site.url}}{{ site.baseurl}}{{page.url}}#disqus_thread" style="text-decoration: none;">Join Discussion</a> -->
       {% if site.disqus.shortname %}
         {% include disqus_comments.html %}
       {% endif %}
