@@ -3,7 +3,8 @@ layout: page
 image_path: /static/img/projects/AOAS.png
 title:  "Welcome to Jekyll First!"
 permalink: "/blogs/welcome-to-jekyll-first"
-date:   2021-08-10 17:34:52 +0545
+created: 2021-08-10 17:34:52 +0545
+updated: 2021-08-14 14:15:35 +0545
 description: "description about first post"
 categories: jekyll python blog
 published: false

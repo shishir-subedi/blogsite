@@ -78,16 +78,13 @@ image: /static/img/about/shishir2.jpg
                   <span class="font-monospace fw-normal fs-5 py-4">What I do?</span>
                   <div>
                     <h6>
-                      &nbsp;&nbsp;&nbsp;<span><i class="fa fa-chevron-right mr-1"
-                          style="vertical-align: middle"></i>&nbsp;&nbsp;Web Application Development</span>
+                      &nbsp;&nbsp;&nbsp;<span><i class="fa fa-hand-o-right mr-1" aria-hidden="true" style="vertical-align: middle"></i>&nbsp;&nbsp;Web Application Development</span>
                     </h6>
                     <h6>
-                      &nbsp;&nbsp;&nbsp;<span><i class="fa fa-chevron-right mr-1"
-                          style="vertical-align: middle"></i>&nbsp;&nbsp;Web Scraping</span>
+                      &nbsp;&nbsp;&nbsp;<span><i class="fa fa-hand-o-right mr-1" aria-hidden="true" style="vertical-align: middle"></i>&nbsp;&nbsp;Web Scraping</span>
                     </h6>
                     <h6>
-                      &nbsp;&nbsp;&nbsp;<span><i class="fa fa-chevron-right mr-1"
-                          style="vertical-align: middle"></i>&nbsp;&nbsp;Deploy application to cloud</span>
+                      &nbsp;&nbsp;&nbsp;<span><i class="fa fa-hand-o-right mr-1" aria-hidden="true" style="vertical-align: middle"></i>&nbsp;&nbsp;Deploy application to cloud</span>
                     </h6>
                   </div>
                 </div>
@@ -355,7 +352,7 @@ image: /static/img/about/shishir2.jpg
                           &nbsp;&nbsp;&nbsp;
                           <span>
                             <i class="fa fa-dot-circle-o" aria-hidden="true" style="vertical-align: middle"></i>
-                            &nbsp;&nbsp;Handling all stages from developemnt to production
+                            &nbsp;&nbsp;Handling all stages from developement to production
                           </span>
                         </h5>
                       </div>
@@ -537,7 +534,10 @@ image: /static/img/about/shishir2.jpg
                   <div class="card bg-dark custom-card blog-card">
                     <img src="{{ site.url}}{{ site.baseurl}}{{ post.image_path }}" class="card-img-top" alt="{{ post.title }}">
                     <div class="card-body">
-                      <h5 class="card-title">{{ post.title }}</h5>
+                      <h5 class="card-title d-inline-block">{{ post.title }}</h5>
+                      <div class="d-inline-block post-date font-small">
+                        <i class="fa fa-calendar"></i><span class="px-2">{{ post.created | date: "%d %B %Y" }}</span>
+                      </div>
                       <hr class="mx-auto" />
                       <p class="card-text">{{ post.description }}</p>
                     </div>

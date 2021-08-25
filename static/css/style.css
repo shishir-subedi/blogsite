@@ -629,6 +629,28 @@ pre[class*="language-"] {
 }
 
 /*======================================================
+|   |   |   |       Blog Page     |     |     | 
+=======================================================*/
+.post-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  color: #757575;
+  font-style: italic;
+  text-align: center;
+}
+
+.post-date {
+  color: #757575;
+  font-style: italic;
+}
+
+.blog-content > p {
+  color: #dfdfdf;
+}
+
+/*======================================================
 |   |   |   |       Code Highlighter    |     |     | 
 =======================================================*/
 .highlight pre { background-color: #272822; }
