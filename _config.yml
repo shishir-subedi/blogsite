@@ -26,6 +26,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   and analytics at Institute of Engineering Pulchowk Campus.
 url: "https://shishirsubedi.com"
 baseurl: ""
+timezone: Asia/Kathmandu
 twitter_username: _shishir_subedi
 github_username:  shishir-subedi
 author:
