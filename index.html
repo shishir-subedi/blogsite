@@ -540,7 +540,7 @@ image: /static/img/about/shishir2.jpg
                         <i class="fa fa-calendar"></i><span class="px-2">{{ post.created | date: "%d %B %Y" }}</span>
                       </div>
                       <hr class="mx-auto" />
-                      <p class="card-text">{{ post.description }}</p>
+                      <p class="card-text">{{ post.description | truncatewords: 30 }}</p>
                     </div>
                   </div>
                 </a>
