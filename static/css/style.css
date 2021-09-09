@@ -773,6 +773,9 @@ pre[class*="language-"] {
 
 /* // X-Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
+  .custom-card {
+    height: 500px;
+  }
 }
 
 /* // XX-Large devices (larger desktops, 1400px and up) */

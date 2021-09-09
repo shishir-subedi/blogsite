@@ -2,7 +2,7 @@
 layout: page
 image_path: /static/img/blogs/TicTacToe.png
 title:  "Tic Tac Toe in Python"
-permalink: "/blogs/tic-tac-toe-python"
+permalink: "/blogs/tic-tac-toe-python/"
 created: 2021-08-17 16:10:52 +0545
 updated: 2021-08-24 14:15:35 +0545
 description: "Our famous childhood game we used to play when we see small piece of blank paper. In this game, our opposition i.e. CPU will use never lose strategy. i.e The game will either ends up in favor of CPU or Draw. The game board is represented in a matrix form and position should be given in coordinate form. CPU is marked as O where as player is marked as X."
