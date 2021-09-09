@@ -1,26 +1,34 @@
-$(function () {
-    /*======================================================
-    |   |   |   |       Preloader     |     |     |      |
-    =======================================================*/
-    $(window).on('load', function () { //make sure that whole site is loaded
-        $('#status').fadeOut();
-        $('#preloader').delay(250).fadeOut();
-    });
+/*======================================================
+|   |   |   Preloader and Remove Disqus Ad    |   |   |
+=======================================================*/
+$(window).on('load', function () { //make sure that whole site is loaded
+    $('#status').fadeOut();
+    $('#preloader').delay(250).fadeOut();
 
-    /*====================================================
-                            Navigation
-    ====================================================*/
-    $(window).scroll(function () {
-        if ($(this).scrollTop() < 50) {
-            // hide nav
-            $("#home-header").removeClass("top-nav");
-            $("#back-to-top").fadeOut('slow');
-        } else {
-            // show nav
-            $("#home-header").addClass("top-nav");
-            $("#back-to-top").fadeIn('slow');
-        }
+    $("iframe[id^='dsq-app']").each(function (i, el) {
+        if(i===0 || i===2) {
+          el.remove();
+        };
     });
+});
+
+
+/*====================================================
+                        Navigation
+====================================================*/
+$(window).scroll(function () {
+    if ($(this).scrollTop() < 50) {
+        // hide nav
+        $("#home-header").removeClass("top-nav");
+        $("#back-to-top").fadeOut('slow');
+    } else {
+        // show nav
+        $("#home-header").addClass("top-nav");
+        $("#back-to-top").fadeIn('slow');
+    }
+});
+
+$(function () {
 
     $('#back-to-top').click(function () {
         $("html, body").animate({
