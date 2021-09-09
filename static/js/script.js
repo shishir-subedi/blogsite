@@ -1,15 +1,9 @@
 /*======================================================
-|   |   |   Preloader and Remove Disqus Ad    |   |   |
+|   |   |   Preloader    |   |   |
 =======================================================*/
 $(window).on('load', function () { //make sure that whole site is loaded
     $('#status').fadeOut();
     $('#preloader').delay(250).fadeOut();
-
-    $("iframe[id^='dsq-app']").each(function (i, el) {
-        if(i===0 || i===2) {
-          el.remove();
-        };
-    });
 });
 
 
