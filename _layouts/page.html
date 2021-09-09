@@ -28,7 +28,11 @@ comments: true
           <!-- <div class="mx-auto title-underline"></div> -->
         </div>
         <div class="col-md-12">
-          <div class="py-2 blog-content">{{ page.content }}</div>
+          <div class="py-2 blog-content">
+            {% include horizontalad.html %}
+            {{ page.content }}
+            {% include horizontalad.html %}
+          </div>
         </div>
       </div>
       {% include  share.html %}
@@ -37,6 +41,9 @@ comments: true
         {% include disqus_comments.html %}
       {% endif %}
     </div>
+  </div>
+  <div class="container">
+    {% include horizontalad.html %}
   </div>
 </section>
 <!-- End Blogs -->

@@ -6,6 +6,16 @@ $(window).on('load', function () { //make sure that whole site is loaded
     $('#preloader').delay(250).fadeOut();
 });
 
+/*======================================================
+|   |   |   Disqus ads removal    |   |   |
+=======================================================*/
+$(window).on('load', function () {
+    $("iframe[id^='dsq-app']").each(function (i, el) {
+        if(i===0 || i===2) {
+          el.remove();
+        };
+    });
+});
 
 /*====================================================
                         Navigation
