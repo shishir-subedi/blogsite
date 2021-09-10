@@ -9,6 +9,7 @@ description: "Our famous childhood game we used to play when we see small piece 
 categories: Python AI Game
 published: true
 tags: Game Python AI
+hitscount: "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fshishirsubedi.com%2Fblogs%2Ftic-tac-toe-python%2F&count_bg=%232E3439&title_bg=%23FF0000&icon=&icon_color=%23E7E7E7&title=Visited&edge_flat=false"
 ---
 
 The internal game board is represented by a 3x3 matrix where digit "0" represents empty space. When user place mark "X", digit "0" in matrix is replaced by digit "1" and digit "2" when CPU place mark "O". Game is completed when all the spaces are marked unless any player wins before all the spaces are occupied. To keep track of game state we use state variable "step" and to keep track of which player turn is it state variable "turn" is used. If turn value is 0 it's player turn and if it is 1 it's CPU turn. Below is the code snippet for initialization.

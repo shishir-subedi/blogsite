@@ -9,6 +9,13 @@ jekyll serve
 3. Function to Share post to social media
 4. Disques Comment
 5. Categories Filter
+6. visitors counter
+7. minutes to read
+8. number of comments
 
 # To build your Jekyll site in production environment use the following command.
     JEKYLL_ENV=production bundle exec jekyll build
+
+views count config:
+    visited: #FF0000
+    count: #2E3439
