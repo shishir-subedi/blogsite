@@ -302,9 +302,6 @@ image: /static/img/about/shishir2.jpg
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        {% include verticalad.html %}
-      </div>
     </div>
   </div>
 </section>
@@ -314,10 +311,7 @@ image: /static/img/about/shishir2.jpg
 <section class="py-5" id="experiences">
   <div class="container wow fadeIn animated" data-wow-delay="0.4s">
     <div class="row">
-      <div class="col-md-4">
-        {% include verticalad.html %}
-      </div>
-      <div class="col-md-8">
+      <div class="offset-md-4 col-md-8">
         <div class="text-center content-title">
           <h3 class="my-2 pt-5">Experiences</h3>
           <div class="mx-auto title-underline"></div>
@@ -550,9 +544,7 @@ image: /static/img/about/shishir2.jpg
                     <img src="{{ site.url}}{{ site.baseurl}}{{ post.image_path }}" class="card-img-top" alt="{{ post.title }}">
                     <div class="card-body">
                       <h5 class="card-title d-inline-block">{{ post.title }}</h5>
-                      <div class="d-inline-block post-date font-small">
-                        <i class="fa fa-calendar"></i><span class="px-2">{{ post.created | date: "%d %B %Y" }}</span>
-                      </div>
+                      <span class="d-inline-block post-date font-small"> - {{ post.created | date: "%d %B %Y" }}</span>
                       <hr class="mx-auto" />
                       <p class="card-text">{{ post.description | truncatewords: 30 }}</p>
                     </div>
@@ -562,7 +554,7 @@ image: /static/img/about/shishir2.jpg
               {% endfor %}
             </div>
             <div class="col-md-12 mt-3">
-              <a class="btn btn-sm btn-info pull-right" href="/blogs">More...</a>
+              <a class="btn btn-sm btn-info pull-right" href="/blogs/">More...</a>
             </div>
           </div>
         </div>
@@ -571,10 +563,4 @@ image: /static/img/about/shishir2.jpg
   </div>
 </section>
 <!-- End Blogs -->
-
-<!-- Google Ad -->
-<div class="container">
-  {% include horizontalad.html %}
-</div>
-<!-- End Google Ad -->
 {% include footer.html %}
