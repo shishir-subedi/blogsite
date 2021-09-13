@@ -2,6 +2,8 @@
 bundle exec jekyll serve --livereload
 jekyll serve
 
+JEKYLL_ENV=production jekyll build
+
 # thinks to make changes
 
 1. SEO
