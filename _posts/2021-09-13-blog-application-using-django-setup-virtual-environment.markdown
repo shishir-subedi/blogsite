@@ -1,11 +1,11 @@
 ---
 layout: page
 image_path: /static/img/blogs/blog/building-blog-application-django-setup-project-virtual-environment.png
-title:  "Building a blog application with django | Download the blog template also setup virtual environment and django project"
+title:  "Building a blog application with django | Download the blog template, setup virtual environment and create django project"
 permalink: "/blogs/building-blog-application-django-setup-project-virtual-environment/"
 #next_post: ""
 previous_post: "/blogs/tic-tac-toe-python/"
-created: 2021-09-09 15:33:00 +0545
+created: 2021-09-13 17:18:00 +0545
 description: "In this first part of building blog application with django, we are going download the free blog template and setup the virtual environment to install django and to create django blog project."
 categories: Django Blog
 published: true
