@@ -10,6 +10,7 @@ description: "In this first part of building blog application with django, we ar
 categories: Django Blog
 published: true
 tags: Django Blog Vritual-Environment Project-Setup
+hitscount: "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fshishirsubedi.com%2Fblogs%2Fbuilding-blog-application-django-setup-project-virtual-environment%2F&count_bg=%232E3439&title_bg=%23FF0000&icon=&icon_color=%23E7E7E7&title=Visited&edge_flat=false"
 ---
 
 This is the fisrt part of the series "Building a blog application with django". In this section, we first download a blog template that we are using in this series from the [Link](https://bootstrapious.com/p/bootstrap-blog){:target="_blank"}. You need to provide email and firstname in order to obtain this template in your email.
