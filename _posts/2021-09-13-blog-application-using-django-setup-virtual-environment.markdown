@@ -3,17 +3,17 @@ layout: page
 image_path: /static/img/blogs/blog/building-blog-application-django-setup-project-virtual-environment.png
 title:  "Building a blog application with django | Download the blog template, setup virtual environment and create django project"
 permalink: "/blogs/building-blog-application-django-setup-project-virtual-environment/"
-#next_post: ""
+next_post: "/blogs/building-blog-application-django-configure-settings-create-apps-interaction-django-admin-panel/"
 previous_post: "/blogs/tic-tac-toe-python/"
 created: 2021-09-13 17:18:00 +0545
 description: "In this first part of building blog application with django, we are going download the free blog template and setup the virtual environment to install django and to create django blog project."
 categories: Django Blog
 published: true
-tags: Django Blog Vritual-Environment Project-Setup
+tags: Django Blog Virtual-Environment Project-Setup
 hitscount: "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fshishirsubedi.com%2Fblogs%2Fbuilding-blog-application-django-setup-project-virtual-environment%2F&count_bg=%232E3439&title_bg=%23FF0000&icon=&icon_color=%23E7E7E7&title=Visited&edge_flat=false"
 ---
 
-This is the fisrt part of the series "Building a blog application with django". In this section, we first download a blog template that we are using in this series from the [Link](https://bootstrapious.com/p/bootstrap-blog){:target="_blank"}. You need to provide email and firstname in order to obtain this template in your email.
+This is the first part of the series "Building a blog application with django". In this section, we first download a blog template that we are using in this series from the [Link](https://bootstrapious.com/p/bootstrap-blog){:target="_blank"}. You need to provide email and firstname in order to obtain this template in your email.
 
 Now make a new folder in the preferred directory in your computer e.g. Desktop. Make a folder django-blog and inside this directory we will setup our virtual environment and django project. The importance of making virtual environment is that you can seprate the project dependencies from the rest of local installed one so that we have only those dependencies that are required for the project and same dependencies can be installed on server at the time of deployment.
 
