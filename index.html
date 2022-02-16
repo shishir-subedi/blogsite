@@ -210,7 +210,7 @@ image: /static/img/about/shishir2.jpg
 </section>
 <!-- End Skills -->
 
-<!-- Tech Stack -->
+<!-- Tech Stack and Tools-->
 <section class="py-5" id="stack">
   <div class="wow fadeIn animated" data-wow-delay="0.4s">
     <div class="text-center content-title">
@@ -218,9 +218,9 @@ image: /static/img/about/shishir2.jpg
       <div class="mx-auto title-underline"></div>
     </div>
     <div class="container">
-      <div class="row py-2">
+      <div class="row my-5">
         <div class="offset-md-1 col-md-10">
-          <div class="row">
+          <div class="row g-4">
             <div class="col-md-2 col-3">
               <a href="https://www.python.org/" target="_blank">
                 <img src="{{ site.url}}{{ site.baseurl}}/static/img/techstack/python.svg" class="img-fluid p-md-2 p-lg-3" />
@@ -237,6 +237,11 @@ image: /static/img/about/shishir2.jpg
               </a>
             </div>
             <div class="col-md-2 col-3">
+              <a href="https://www.elastic.co/elasticsearch/" target="_blank">
+                <img src="{{ site.url}}{{ site.baseurl}}/static/img/techstack/elasticsearch.svg" class="img-fluid p-md-2 p-lg-3" />
+              </a>
+            </div>
+            <div class="col-md-2 col-3">
               <a href="https://www.mysql.com/" target="_blank">
                 <img src="{{ site.url}}{{ site.baseurl}}/static/img/techstack/mysql.svg" class="img-fluid p-md-2 p-lg-3" />
               </a>
@@ -246,25 +251,23 @@ image: /static/img/about/shishir2.jpg
                 <img src="{{ site.url}}{{ site.baseurl}}/static/img/techstack/postgresql.svg" class="img-fluid p-md-2 p-lg-3" />
               </a>
             </div>
-            <div class="col-md-2 col-3">
-              <a href="https://www.elastic.co/elasticsearch/" target="_blank">
-                <img src="{{ site.url}}{{ site.baseurl}}/static/img/techstack/elasticsearch.svg" class="img-fluid p-md-2 p-lg-3" />
-              </a>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</section>
+
+<section class="py-5" id="tools">
   <div class="wow fadeIn animated" data-wow-delay="0.6s">
     <div class="text-center content-title">
-      <h3 class="my-2 pt-2">Tools</h3>
+      <h3 class="my-2 pt-5">Tools</h3>
       <div class="mx-auto title-underline"></div>
     </div>
     <div class="container">
-      <div class="row pt-2 pb-5">
+      <div class="row pt-2 my-5">
         <div class="offset-md-1 col-md-10">
-          <div class="row">
+          <div class="row g-4">
             <div class="col-md-2 col-3">
               <a href="https://aws.amazon.com/" target="_blank">
                 <img src="{{ site.url}}{{ site.baseurl}}/static/img/techstack/aws.svg" class="img-fluid p-md-2 p-lg-3" />
@@ -285,13 +288,18 @@ image: /static/img/about/shishir2.jpg
                 <img src="{{ site.url}}{{ site.baseurl}}/static/img/techstack/trello.svg" class="img-fluid p-md-2 p-lg-3" />
               </a>
             </div>
+            <div class="col-md-2 col-3">
+              <a href="https://jekyllrb.com/" target="_blank">
+                <img src="{{ site.url}}{{ site.baseurl}}/static/img/techstack/jekyll.svg" class="img-fluid p-md-2 p-lg-3" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-<!-- Tech Stack -->
+<!-- Tech Stack and Tools-->
 
 <!-- Education -->
 <section class="py-5" id="educations">
@@ -537,65 +545,79 @@ image: /static/img/about/shishir2.jpg
       <div class="row py-3">
         <div class="col-md-12">
           <div class="row">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-              <div class="col">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 card-container">
+              <div class="col blog-card">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/institute.png" class="card-img-top p-1" alt="Institute App">
-                  <div class="card-body">
-                    <h5 class="card-title">Institute App</h5>
-                    <p class="card-text">A native mobile app for student where student can read newsletters, can
-                      download handsout and can give online exams.</p>
+                  <div class="card bg-dark custom-card blog-card">
+                    <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/institute.png" class="card-img-top p-1" alt="Institute App">
+                    <div class="card-body">
+                      <h5 class="card-title d-inline-block">Institute App</h5>
+                      <hr class="mx-auto" />
+                      <p class="card-text">A native mobile app for student where student can read newsletters, can
+                        download handsout and can give online exams.</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col">
+              <div class="col blog-card">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/blog.png" class="card-img-top p-1" alt="Personal Blog">
-                  <div class="card-body">
-                    <h5 class="card-title">Personal Blog Site</h5>
-                    <p class="card-text">
-                      Personal blog site made with python django and hosted at pythonanywhere for free.
-                    </p>
+                  <div class="card bg-dark custom-card blog-card">
+                    <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/blog.png" class="card-img-top p-1" alt="Personal Blog">
+                    <div class="card-body">
+                      <h5 class="card-title d-inline-block">Personal Blog Site</h5>
+                      <hr class="mx-auto" />
+                      <p class="card-text">Personal blog site made with python django and hosted at pythonanywhere for free.</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col">
+              <div class="col blog-card">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/quiz.png" class="card-img-top p-1" alt="Quiz App">
-                  <div class="card-body">
-                    <h5 class="card-title">Quiz App</h5>
-                    <p class="card-text">
-                      Simple quiz web application made with python django.
-                    </p>
+                  <div class="card bg-dark custom-card blog-card">
+                    <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/quiz.png" class="card-img-top p-1" alt="Quiz App">
+                    <div class="card-body">
+                      <h5 class="card-title d-inline-block">Quiz App</h5>
+                      <hr class="mx-auto" />
+                      <p class="card-text">Simple quiz web application made with python django.</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col">
+              <div class="col blog-card">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/care.png" class="card-img-top p-1" alt="AgedCare">
-                  <div class="card-body">
-                    <h5 class="card-title">AgedCare</h5>
-                    <p class="card-text">A web app for a aged care where user with different roles (Doctor, Nurse,
-                      Admin) have their own accessibility.</p>
+                  <div class="card bg-dark custom-card blog-card">
+                    <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/care.png" class="card-img-top p-1" alt="AgedCare">                    
+                    <div class="card-body">
+                      <h5 class="card-title d-inline-block">Aged Care System</h5>
+                      <hr class="mx-auto" />
+                      <p class="card-text">A web app for a aged care where user with different roles (Doctor, Nurse,
+                        Admin) have their own accessibility.</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col">
+              <div class="col blog-card">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/AOAS.png" class="card-img-top p-1" alt="Static Website">
-                  <div class="card-body">
-                    <h5 class="card-title">Static Website</h5>
-                    <p class="card-text">A static website for a decor shop made with HTML5/CSS3/JS and using
-                      Bootstrap5 as a UI framework.</p>
+                  <div class="card bg-dark custom-card blog-card">
+                    <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/AOAS.png" class="card-img-top p-1" alt="Static Website">
+                    <div class="card-body">
+                      <h5 class="card-title d-inline-block">Static Website</h5>
+                      <hr class="mx-auto" />
+                      <p class="card-text">A static website for a decor shop made with HTML5/CSS3/JS and using
+                        Bootstrap5 as a UI framework.</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col">
+              <div class="col blog-card">
                 <div class="card bg-dark custom-card">
-                  <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/confidential.png" class="card-img-top p-1" alt="Confidential App">
-                  <div class="card-body">
-                    <h5 class="card-title">Confidential App</h5>
-                    <p class="card-text">No additional information to disclose.</p>
+                  <div class="card bg-dark custom-card blog-card">
+                    <img src="{{ site.url}}{{ site.baseurl}}/static/img/projects/confidential.png" class="card-img-top p-1" alt="Confidential App">
+                    <div class="card-body">
+                      <h5 class="card-title d-inline-block">An Authorization Server</h5>
+                      <hr class="mx-auto" />
+                      <p class="card-text">A central server which contains users and partner user will create app on the server. Guest user can login to the app using authorization token.</p>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -906,9 +906,6 @@ iframe[src*="ads-iframe"] {
 
 /* // Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-  .custom-card {
-    height: 400px;
-  }
   .blog-card {
     height: 500px;
   }
