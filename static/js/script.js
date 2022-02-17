@@ -77,4 +77,12 @@ $(function () {
     }, {
         offset: 'bottom-in-view'
     });
+
+    /*======================================================
+    |   |   |   |  Animate Techstack on hover    |     |   |
+    =======================================================*/
+    $(".techstack-image").hover( function (e) {
+        $(this).attr("data-wow-duration", "0.2s")
+        $(this).toggleClass('wow pulse animated', e.type === 'mouseenter');
+    });
 });
