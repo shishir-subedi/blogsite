@@ -205,6 +205,11 @@ ul.social-list li:nth-child(5) a:hover {
   border-color: transparent;
 }
 
+ul.social-list li:nth-child(6) a:hover {
+  background: #f48024;
+  border-color: transparent;
+}
+
 #back-to-top {
   position: fixed;
   bottom: 0;
