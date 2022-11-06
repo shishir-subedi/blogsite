@@ -314,7 +314,7 @@ urlpatterns = [
 ]
 {% endhighlight %}
 
-For empty path i.e. base url (in local developement, localhost:8000/ and in production your domain) it will include the urls of core app. In the core app we only have one url pointing to the home view which eventually render index page from folder template.
+For empty path i.e. base url (in local development, localhost:8000/ and in production your domain) it will include the urls of core app. In the core app we only have one url pointing to the home view which eventually render index page from folder template.
 
 *Now if you go to the home url you will find your index page rendered.*
 
