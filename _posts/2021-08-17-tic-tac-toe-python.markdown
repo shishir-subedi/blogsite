@@ -1,7 +1,7 @@
 ---
 layout: page
 image_path: /static/img/blogs/TicTacToe.png
-title:  "Tic Tac Toe in Python"
+title: "Tic Tac Toe in Python"
 permalink: "/blogs/tic-tac-toe-python/"
 next_post: "/blogs/building-blog-application-django-setup-project-virtual-environment/"
 #previous_post: ""

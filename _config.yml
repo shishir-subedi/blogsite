@@ -18,21 +18,24 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Shishir's Blog Site
-tagline: A jekyll powered blog site
+title: Shishir Subedi
+tagline: Shishir Subedi Blogsite
 description: >- # this means to ignore newlines until "baseurl:"
-  Hi! I'm Shishir Subedi and I'm a freelance software engineer. Currently
-  I'm pursuing masters in computer engineering specialization in Data science
+  Hi! I'm Shishir Subedi and I'm a freelance software engineer and an astrology researcher. Currently
+  I'm pursuing masters in computer engineering specialization in data science
   and analytics at Institute of Engineering Pulchowk Campus.
 url: "https://shishirsubedi.com"
 baseurl: ""
 timezone: Asia/Kathmandu
 twitter_username: _shishir_subedi
-github_username:  shishir-subedi
+github_username: ccir41
+linkedin_username: shishir-subedi
+facebook_username: shishir.subedi1
 author:
   name: Shishir Subedi
+  url: https://shishirsubedi.com/
   twitter: _shishir_subedi
-  image: shishir.jpg
+  image: /static/img/about/shishir-subedi.jpeg
 twitter:
   username: _shishir_subedi
   card: summary_large_image
@@ -43,6 +46,7 @@ social:
     - https://www.facebook.com/shishir.subedi1
     - https://www.linkedin.com/in/shishir-subedi
     - https://github.com/ccir41
+    - https://instagram.com/_shishir_subedi
 webmaster_verifications:
   google: DYuFXBmC_p9rUwMiI-IaOfnt1c9E8Y6HWzE5vyOdZIk
 

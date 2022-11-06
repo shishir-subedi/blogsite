@@ -1,7 +1,7 @@
 ---
 layout: page
 image_path: /static/img/blogs/blog/building-blog-application-django-configure-settings-create-apps-render-html-template-interaction-django-admin-panel.png
-title:  "Building a blog application with django | Configure project settings, create apps and views to render simple html page"
+title: "Building a blog application with django | Configure project settings, create apps and views to render simple html page"
 permalink: "/blogs/building-blog-application-django-configure-settings-create-apps-render-html-template-interaction-django-admin-panel/"
 next_post: "/blogs/building-blog-application-django-configure-static-media-settings-render-home-page-downloaded-template/"
 previous_post: "/blogs/building-blog-application-django-setup-project-virtual-environment/"
