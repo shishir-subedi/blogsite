@@ -11,7 +11,7 @@ description: "In this blog post we will learn how to deploy pre-trained machine 
 categories: Cloud Computing Machine Learning DevOps Serverless Computing Infrastructure as Code
 published: true
 tags: AWS Terraform Sagemaker ML DevOps Serverless
-hitscount: "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fshishirsubedi.com%2Fblogs%2Ftic-tac-toe-python%2F&count_bg=%232E3439&title_bg=%23FF0000&icon=&icon_color=%23E7E7E7&title=Visited&edge_flat=false"
+hitscount: "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fshishirsubedi.com%2Fblogs%2Fsagemaker-pre-trained-model-deployment-terraform%2F&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"
 ---
 **Introduction**
 
