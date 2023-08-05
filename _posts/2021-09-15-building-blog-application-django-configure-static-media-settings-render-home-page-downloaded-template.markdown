@@ -3,7 +3,7 @@ layout: page
 image_path: /static/img/blogs/blog/building-blog-application-django-configure-static-media-settings-render-home-page-downloaded-template.png
 title: "Building a blog application with django | Configure static and media files settings, render home page of downloaded template"
 permalink: "/blogs/building-blog-application-django-configure-static-media-settings-render-home-page-downloaded-template/"
-#next_post: ""
+next_post: "/blogs/sagemaker-pre-trained-model-deployment-terraform/"
 previous_post: "/blogs/building-blog-application-django-configure-settings-create-apps-render-html-template-interaction-django-admin-panel/"
 created: 2021-09-15 22:23:00 +0545
 description: "In this third part of series - building blog application with django, we are going configure static and media settings so that it can render the static content and can store media files uploaded by user. By doing this so we can render the downloaded template's index page as it is."
