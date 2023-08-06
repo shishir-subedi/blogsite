@@ -6,7 +6,7 @@ permalink: "/blogs/sagemaker-pre-trained-model-deployment-terraform/"
 # next_post: "/blogs/building-blog-application-django-setup-project-virtual-environment/"
 previous_post: "/blogs/building-blog-application-django-configure-static-media-settings-render-home-page-downloaded-template/"
 created: 2023-08-04 20:27:00 +0545
-updated: 2023-08-04 20:27:00 +0545
+updated: 2023-08-06 18:46:00 +0545
 description: "In this blog post we will learn how to deploy pre-trained machine learning models on AWS Sagemaker. This blog post explores the powerful combination of Amazon SageMaker and Terraform to set up Sagemaker model endpoints. Harness the flexibility and scalability of custom model deployments while seamlessly integrating with your applications using RESTful API endpoints without the complexity of infrastructure management."
 categories: Cloud Computing Machine Learning DevOps Serverless Computing Infrastructure as Code
 published: true
@@ -231,6 +231,8 @@ Always exercise caution when using `terraform apply` and `terraform destroy`, as
 **What's Next : Adding Amazon Cognito to protect API from unauthorized access**
 
 While we have successfully deployed the Sagemaker model endpoint using Terraform and integrated it with Amazon API Gateway, we can further enhance the security and control of our machine learning APIs by implementing user authentication and authorization. Amazon Cognito is a fully managed service that provides secure user sign-up, sign-in, and access control for your web and mobile applications. By integrating Amazon Cognito with API Gateway, we can control access to the API and ensure that only authorized users can make predictions using the machine learning model.
+
+You can find the cognito implementation on branch `sagemaker-with-apigateway-and-cognito` in the above repository.
 <br/>
 
 ---
