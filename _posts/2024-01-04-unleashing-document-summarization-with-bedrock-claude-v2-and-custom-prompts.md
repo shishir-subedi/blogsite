@@ -4,7 +4,7 @@ image_path: /static/img/blogs/blog/unleashing-document-summarization-with-bedroc
 title: "Unleashing Document Summarization with Bedrock Claude v2 and Custom Prompts"
 permalink: "/blogs/unleashing-document-summarization-with-bedrock-claude-v2-and-custom-prompts/"
 # next_post: ""
-previous_post: "/blogs/unleashing-document-summarization-with-bedrock-claude-v2-and-custom-prompts/"
+previous_post: "/blogs/sagemaker-pre-trained-model-deployment-terraform/"
 created: 2024-01-04 17:33:00 +0545
 updated: 2024-01-04 20:03:00 +0545
 description: "In this blog post you will discover the magic of document summarization with Bedrock Claude v2 and custom prompts. I'll guide you from setting up AWS credentials to unlocking the power of Large Language Models, breaking down each step. Witness how Bedrock transforms intricate content into easy-to-understand summaries and dumping into json to be rendered at frontend."
