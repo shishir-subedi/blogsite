@@ -3,7 +3,7 @@ layout: page
 image_path: /static/img/blogs/blog/sagemaker-pre-trained-model-deployment-terraform.png
 title: "Sagemaker Pre-trained Model Deployment with Terraform"
 permalink: "/blogs/sagemaker-pre-trained-model-deployment-terraform/"
-# next_post: "/blogs/building-blog-application-django-setup-project-virtual-environment/"
+next_post: "/blogs/unleashing-document-summarization-with-bedrock-claude-v2-and-custom-prompts/"
 previous_post: "/blogs/building-blog-application-django-configure-static-media-settings-render-home-page-downloaded-template/"
 created: 2023-08-04 20:27:00 +0545
 updated: 2023-08-06 18:46:00 +0545
