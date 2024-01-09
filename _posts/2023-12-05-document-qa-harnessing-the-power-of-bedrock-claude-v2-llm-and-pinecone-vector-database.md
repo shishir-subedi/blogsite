@@ -5,8 +5,8 @@ title: "Document QA: Harnessing the power of Bedrock Claude v2 LLM and Pinecone 
 permalink: "/blogs/document-qa-harnessing-the-power-of-bedrock-claude-v2-llm-and-pinecone-vector-database/"
 # next_post: ""
 previous_post: "/blogs/unleashing-document-summarization-with-bedrock-claude-v2-and-custom-prompts/"
-created: 2024-01-07 10:03:00 +0545
-updated: 2024-01-07 10:03:00 +0545
+created: 2023-12-05 10:03:00 +0545
+updated: 2023-12-05 10:03:00 +0545
 description: "In this blog post you will discover the transformative synergy between Amazon Bedrock FM and Pinecone Vector Database, reshaping the essence of Document Question Answering (QA). Uncover how these technologies empower chatbots to seamlessly navigate complex documents, offering a glimpse into the future of intelligent customer support."
 categories: Document Question Answering, Natural Language Processing, Large Language Models, Text Analytics, Information Retrieval, Retrieval Augmented Generation
 published: true

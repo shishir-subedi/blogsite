@@ -5,8 +5,8 @@ title: "Unleashing Document Summarization with Bedrock Claude v2 and Custom Prom
 permalink: "/blogs/unleashing-document-summarization-with-bedrock-claude-v2-and-custom-prompts/"
 next_post: "/blogs/document-qa-harnessing-the-power-of-bedrock-claude-v2-llm-and-pinecone-vector-database"
 previous_post: "/blogs/sagemaker-pre-trained-model-deployment-terraform/"
-created: 2024-01-04 17:33:00 +0545
-updated: 2024-01-07 10:03:00 +0545
+created: 2023-10-10 17:33:00 +0545
+updated: 2023-10-10 10:03:00 +0545
 description: "In this blog post you will discover the magic of document summarization with Bedrock Claude v2 and custom prompts. I'll guide you from setting up AWS credentials to unlocking the power of Large Language Models, breaking down each step. Witness how Bedrock transforms intricate content into easy-to-understand summaries and dumping into json to be rendered at frontend."
 categories: Document Summarization, Natural Language Processing, Large Language Models, Text Analytics, Information Retrieval
 published: true
