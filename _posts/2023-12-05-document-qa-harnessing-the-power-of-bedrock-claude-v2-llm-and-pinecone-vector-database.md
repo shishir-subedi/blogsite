@@ -3,7 +3,7 @@ layout: page
 image_path: /static/img/blogs/blog/document-qa-harnessing-the-power-of-bedrock-claude-v2-llm-and-pinecone-vector-database.png
 title: "Document QA: Harnessing the power of Bedrock Claude v2 LLM and Pinecone Vector Database"
 permalink: "/blogs/document-qa-harnessing-the-power-of-bedrock-claude-v2-llm-and-pinecone-vector-database/"
-# next_post: ""
+next_post: "/blogs/deploying-app-https-aws-ec2-ngrok/"
 previous_post: "/blogs/unleashing-document-summarization-with-bedrock-claude-v2-and-custom-prompts/"
 created: 2023-12-05 10:03:00 +0545
 updated: 2023-12-05 10:03:00 +0545

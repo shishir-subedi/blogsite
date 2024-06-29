@@ -21,3 +21,24 @@ JEKYLL_ENV=production jekyll build
 views count config:
     visited: #FF0000
     count: #2E3439
+
+
+## Fresh installation
+`sudo apt-get install ruby-full build-essential zlib1g-dev`
+
+```bash
+echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc
+echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
+echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+`gem install jekyll bundler`
+
+`jekyll --version`
+
+`bundle update`
+
+`bundle install`
+
+`bundle exec jekyll serve --livereload`

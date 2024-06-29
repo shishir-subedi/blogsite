@@ -33,3 +33,5 @@ gem 'jekyll-seo-tag'
 
 # for sitemap
 gem 'jekyll-sitemap'
+
+gem 'webrick'
