@@ -6,7 +6,7 @@ permalink: "/blogs/empowering-data-analysis-through-llms-and-vector-databases/"
 # next_post: ""
 previous_post: "/blogs/deploying-app-https-aws-ec2-ngrok/"
 created: 2024-07-03 8:25:00 +0545
-updated: 2024-07-04 10:24:00 +0545
+updated: 2024-07-04 15:45:00 +0545
 description: "Explore the integration of LLMs and vector databases to enhance data analysis. Learn how to use Claude 3.5 Sonnet, LangChain, and Pinecone to efficiently retrieve and analyze CSV data, providing natural language insights with ease."
 categories: Data Analysis, LLMs, Pinecone, Langchain, Prompt Engineering, Streamlit, Tabular RAG
 published: true
@@ -180,6 +180,25 @@ We used LangGraph to orchestrate this flow and is shown in the diagram below.
   <img src="/static/img/blogs/empowering-data-analysis-through-llms-and-vector-databases-app-flow.png" alt="Flow">
 </p>
 <p align="center"><em>Figure: Application flow diagram generated from Langgraph.</em></p>
+
+<br/>
+
+### Sample App Output
+<br/>
+<p align="center">
+  <img src="/static/img/blogs/empowering-data-analysis-through-llms-and-vector-databases-output-dataframe.png" alt="Flow">
+</p>
+<p align="center"><em>Figure: Output dataframe.</em></p>
+
+<p align="center">
+  <img src="/static/img/blogs/empowering-data-analysis-through-llms-and-vector-databases-output-graph.png" alt="Flow">
+</p>
+<p align="center"><em>Figure: Output Graph.</em></p>
+
+<p align="center">
+  <img src="/static/img/blogs/empowering-data-analysis-through-llms-and-vector-databases-output-answer.png" alt="Flow">
+</p>
+<p align="center"><em>Figure: Output Answer.</em></p>
 
 <br/>
 
