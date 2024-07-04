@@ -3,7 +3,7 @@ layout: page
 image_path: /static/img/blogs/blog/deploying-app-https-aws-ngrok.svg
 title: "Deploying an App with HTTPs on an EC2 Instance using Ngrok"
 permalink: "/blogs/deploying-app-https-aws-ec2-ngrok/"
-# next_post: ""
+next_post: "/blogs/empowering-data-analysis-through-llms-and-vector-databases/"
 previous_post: "/blogs/document-qa-harnessing-the-power-of-bedrock-claude-v2-llm-and-pinecone-vector-database/"
 created: 2024-06-28 9:03:00 +0545
 updated: 2024-06-29 12:02:00 +0545
