@@ -202,6 +202,6 @@ We used LangGraph to orchestrate this flow and is shown in the diagram below.
 
 <br/>
 
-### Summary
+### Conclusion
 <br/>
 In today's data-driven world, integrating large language models (LLMs) with vector databases is revolutionizing data analysis. LLMs simplify complex data queries into natural language questions, enhancing our ability to uncover insights from structured data such as CSV files and SQL tables. Our approach leverages vector databases to extract the most relevant schemas, aiding in answering queries. Then, LLMs precisely extract required schemas from these candidates to generate executable code, optimizing data processing and analysis. This integration streamlines decision-making processes across various fields, showcasing the transformative potential of LLMs in modern data analytics.
