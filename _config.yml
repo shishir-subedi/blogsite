@@ -24,7 +24,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   Hi! I'm Shishir Subedi and I'm a freelance software engineer and an astrology researcher. Currently
   I'm pursuing masters in computer engineering specialization in data science
   and analytics at Institute of Engineering Pulchowk Campus.
-url: "https://shishirsubedi.com"
+url: "https://shishir-subedi.github.io/blogsite"
 baseurl: ""
 timezone: Asia/Kathmandu
 twitter_username: _shishir_subedi
@@ -33,7 +33,7 @@ linkedin_username: shishir-subedi
 facebook_username: shishir.subedi1
 author:
   name: Shishir Subedi
-  url: https://shishirsubedi.com/
+  url: https://shishir-subedi.github.io/blogsite/
   twitter: _shishir_subedi
   image: /static/img/about/shishir-subedi.jpeg
 twitter:
