@@ -1,0 +1,2457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>From ECE to GenAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one slide per screen, content column capped near 66rem, control bar pinned to the bottom, notes drawer above it */
+:root {
+  --bg: #F4F5FA;
+  --surface: #FFFFFF;
+  --fg: #111733;
+  --muted: #586082;
+  --line: #D8DCEA;
+  --accent: #C8102E;      /* crimson from the Nepal flag */
+  --accent-soft: #FBE4E8;
+  --blue: #1E3A9E;        /* flag border blue */
+  --blue-soft: #E2E8FB;
+  --good: #1B7A4A;
+  --good-soft: #DCF2E5;
+  --warn: #9A5B00;
+  --warn-soft: #FCEFD8;
+  --bad: #B42318;
+  --bad-soft: #FDE5E2;
+  --on-accent: #FFFFFF;
+  --code-bg: #0E1430;
+  --code-fg: #E4E9F8;
+  --code-dim: #8D97BD;
+  --code-hl: #26346E;
+  --font-display: "Archivo", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0F22; --surface: #131A33; --fg: #EDF0FA; --muted: #9AA3C3; --line: #27314F;
+    --accent: #FF5470; --accent-soft: #3A1220; --blue: #8AA5FF; --blue-soft: #18234A;
+    --good: #52CC8F; --good-soft: #0F2E20; --warn: #F2B457; --warn-soft: #33240C;
+    --bad: #FF7B6C; --bad-soft: #3A1612; --on-accent: #FFFFFF;
+    --code-bg: #060A18; --code-fg: #E4E9F8; --code-dim: #7D87AD; --code-hl: #1E2A5A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A0F22; --surface: #131A33; --fg: #EDF0FA; --muted: #9AA3C3; --line: #27314F;
+  --accent: #FF5470; --accent-soft: #3A1220; --blue: #8AA5FF; --blue-soft: #18234A;
+  --good: #52CC8F; --good-soft: #0F2E20; --warn: #F2B457; --warn-soft: #33240C;
+  --bad: #FF7B6C; --bad-soft: #3A1612; --on-accent: #FFFFFF;
+  --code-bg: #060A18; --code-fg: #E4E9F8; --code-dim: #7D87AD; --code-hl: #1E2A5A;
+  color-scheme: dark;
+}
+
+html { font-size: min(clamp(15px, calc(0.85vw + 8px), 24px), max(15px, 2.7vh)); height: 100%; }
+body {
+  height: 100%; margin: 0; overflow: hidden;
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); line-height: 1.5;
+  display: grid; grid-template-rows: auto 1fr auto;
+}
+* { box-sizing: border-box; }
+p { margin: 0; }
+ul, ol { margin: 0; padding-left: 1.2em; }
+li + li { margin-top: .35em; }
+code, .mono { font-family: var(--font-mono); font-size: .9em; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 6px; }
+
+/* ---------- chrome ---------- */
+.progress { height: 4px; background: var(--line); }
+.progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .35s ease; }
+
+.deck { position: relative; overflow: hidden; min-height: 0; }
+.slide {
+  position: absolute; inset: 0;
+  overflow-y: auto; overflow-x: hidden;
+  padding-block: 2rem 2.2rem; padding-inline: max(16px, 4.5vw);
+  display: flex; flex-direction: column;
+  opacity: 0; visibility: hidden; transform: translateX(1.5rem);
+  transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s;
+}
+.slide.active { opacity: 1; visibility: visible; transform: none; transition: opacity .35s ease, transform .35s ease; }
+.wrap { width: 100%; max-width: 66rem; margin: auto; display: flex; flex-direction: column; gap: 1.4rem; min-width: 0; }
+
+.bar {
+  display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+  padding: .5rem max(16px, 2vw); padding-bottom: calc(.5rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line); background: var(--surface);
+  font-size: .8rem;
+}
+.bar .talk-name { font-family: var(--font-display); font-stretch: 112%; font-weight: 800; letter-spacing: .01em; color: var(--muted); white-space: nowrap; }
+.bar .talk-name b { color: var(--accent); }
+.bar .group { display: flex; align-items: center; gap: .4rem; }
+.counter { font-family: var(--font-mono); font-variant-numeric: tabular-nums; min-width: 5.5ch; text-align: center; color: var(--muted); }
+.icon-btn {
+  font: inherit; font-weight: 700; color: var(--fg); background: transparent;
+  border: 1px solid var(--line); border-radius: 8px; padding: .3rem .65rem; cursor: pointer;
+}
+.icon-btn:hover { background: var(--blue-soft); }
+.icon-btn[aria-pressed="true"] { background: var(--blue); color: var(--surface); border-color: var(--blue); }
+.icon-btn kbd { font-family: var(--font-mono); font-size: .75em; opacity: .7; margin-left: .3em; }
+@media (max-width: 640px) { .bar .talk-name, .icon-btn kbd { display: none; } }
+
+.notes-panel {
+  position: fixed; left: 0; right: 0; bottom: 3.1rem; z-index: 5;
+  max-height: 38vh; overflow-y: auto;
+  background: var(--surface); border-top: 3px solid var(--blue);
+  padding: 1rem max(16px, 4.5vw); font-size: .95rem;
+  box-shadow: 0 -12px 30px rgba(10, 15, 34, .18);
+}
+.notes-panel h4 { margin: 0 0 .4rem; font-family: var(--font-mono); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); }
+.notes-panel ul { max-width: 70ch; }
+aside.notes { display: none; }
+
+/* ---------- type ---------- */
+.eyebrow { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+h1, h2, h3 { margin: 0; font-family: var(--font-display); text-wrap: balance; }
+h1.display { font-size: clamp(2.5rem, 9vw, 5rem); font-stretch: 122%; font-weight: 880; line-height: .92; letter-spacing: -.02em; }
+h2 { font-size: clamp(1.6rem, 4.6vw, 2.35rem); font-stretch: 112%; font-weight: 820; line-height: 1.05; letter-spacing: -.01em; }
+h3 { font-size: 1.12rem; font-stretch: 105%; font-weight: 760; line-height: 1.2; }
+.lead { font-size: 1.2rem; color: var(--muted); max-width: 52ch; }
+.big { font-family: var(--font-display); font-stretch: 108%; font-weight: 700; font-size: clamp(1.4rem, 4vw, 2.2rem); line-height: 1.15; max-width: 30ch; text-wrap: balance; }
+.accent { color: var(--accent); }
+.blue { color: var(--blue); }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+.caption { font-size: .8rem; color: var(--muted); }
+
+/* ---------- building blocks ---------- */
+.cols-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; }
+.cols-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+.cols-2 > *, .cols-3 > * { min-width: 0; }
+@media (max-width: 800px) { .cols-2, .cols-3 { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: .6rem; }
+.pill { display: inline-flex; align-items: center; gap: .35em; font-family: var(--font-mono); font-size: .72rem; font-weight: 600; letter-spacing: .04em; padding: .2em .65em; border-radius: 999px; white-space: nowrap; }
+.pill.good { background: var(--good-soft); color: var(--good); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.pill.blue { background: var(--blue-soft); color: var(--blue); }
+.pill.red { background: var(--accent-soft); color: var(--accent); }
+.btn {
+  font: inherit; font-weight: 700; font-size: .95rem; cursor: pointer;
+  border: 1.5px solid var(--line); background: var(--surface); color: var(--fg);
+  border-radius: 999px; padding: .5rem 1.1rem;
+}
+.btn:hover { border-color: var(--blue); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: .45; cursor: default; }
+.row { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.quote { border-left: 4px solid var(--accent); padding: .3rem 0 .3rem 1rem; font-family: var(--font-display); font-stretch: 105%; font-weight: 650; font-size: 1.25rem; max-width: 46ch; }
+pre.code {
+  margin: 0; background: var(--code-bg); color: var(--code-fg);
+  font-family: var(--font-mono); font-size: .82rem; line-height: 1.6;
+  padding: 1rem 1.1rem; border-radius: 12px; overflow-x: auto; white-space: pre;
+}
+pre.code .dim { color: var(--code-dim); }
+pre.code .ln { display: block; padding: 0 .4rem; margin: 0 -.4rem; border-radius: 4px; transition: background .25s; }
+pre.code .ln.hl { background: var(--code-hl); }
+
+.frag { opacity: 0; transform: translateY(.6rem); transition: opacity .4s ease, transform .4s ease; }
+.frag.on { opacity: 1; transform: none; }
+
+/* ---------- s1 hero ---------- */
+.hero { gap: 1.6rem; }
+.hero h1 span { color: var(--accent); }
+.tokens { display: flex; flex-wrap: wrap; gap: .35rem .5rem; align-items: flex-end; font-size: clamp(1.05rem, 2.6vw, 1.55rem); }
+.tok {
+  display: inline-flex; flex-direction: column; align-items: flex-start;
+  padding: .15rem .45rem .2rem; border-radius: 8px; background: var(--blue-soft);
+  font-family: var(--font-display); font-weight: 650; font-stretch: 105%;
+}
+.tok small { font-family: var(--font-mono); font-size: .55em; color: var(--blue); font-weight: 600; }
+.replay .tok { animation: tokIn .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * .28s + .2s); }
+@keyframes tokIn { from { opacity: .12; transform: translateY(.5rem); } to { opacity: 1; transform: none; } }
+.caret { display: inline-block; width: .55rem; height: 1.4em; background: var(--accent); border-radius: 2px; animation: blink 1s steps(1) infinite; align-self: center; }
+@keyframes blink { 50% { opacity: 0; } }
+.speaker { font-size: 1.05rem; }
+.hint { font-size: .8rem; color: var(--muted); font-family: var(--font-mono); }
+
+/* ---------- s3 timeline ---------- */
+.timeline { list-style: none; padding: 0; margin: 0; display: grid; grid-template-rows: repeat(6, auto); grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: .55rem 2rem; }
+.timeline li { margin: 0; display: grid; grid-template-columns: 1.1rem 1fr; gap: .8rem; align-items: start; }
+.timeline .dot { width: 1.1rem; height: 1.1rem; border-radius: 50%; border: 3px solid var(--blue); background: var(--surface); margin-top: .25rem; }
+.timeline li.key .dot { border-color: var(--accent); background: var(--accent); }
+.timeline li.paused .dot { border-style: dashed; border-color: var(--muted); }
+.timeline .t { font-family: var(--font-display); font-stretch: 105%; font-weight: 750; font-size: 1.05rem; line-height: 1.2; }
+.timeline .d { font-size: .88rem; color: var(--muted); }
+@media (max-width: 800px) { .timeline { grid-template-rows: none; grid-auto-flow: row; } }
+
+.chain { display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; font-family: var(--font-display); font-weight: 700; font-stretch: 105%; }
+.chain span.step { padding: .35rem .8rem; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); }
+.chain span.arrow { color: var(--accent); }
+
+/* ---------- s5 flow ---------- */
+.flow { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr); gap: .6rem; align-items: stretch; }
+.flow .node { background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius); padding: .9rem 1rem; display: flex; flex-direction: column; gap: .4rem; animation: pulse 6s infinite; }
+.flow .node:nth-of-type(2) { animation-delay: 1.5s; }
+.flow .node:nth-of-type(3) { animation-delay: 3s; }
+.flow .node:nth-of-type(4) { animation-delay: 4.5s; }
+@keyframes pulse { 0%, 22% { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); } 30%, 100% { border-color: var(--line); box-shadow: none; } }
+.flow .node .lbl { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.flow .node .val { font-family: var(--font-display); font-weight: 700; font-stretch: 105%; }
+.flow .arr { align-self: center; color: var(--accent); font-size: 1.5rem; font-weight: 700; }
+.mini-bars { display: grid; gap: .25rem; font-size: .8rem; }
+.mini-bars div { display: grid; grid-template-columns: 5.5rem 1fr; gap: .4rem; align-items: center; }
+.mini-bars i { display: block; height: .55rem; background: var(--blue); border-radius: 3px; }
+.mini-bars div:first-child i { background: var(--accent); }
+.loop-back { border: 2px dashed var(--accent); border-top: none; border-radius: 0 0 18px 18px; padding: .5rem 1rem .6rem; text-align: center; font-weight: 700; color: var(--accent); margin-inline: 8%; margin-top: -.4rem; }
+@media (max-width: 800px) {
+  .flow { grid-template-columns: 1fr; }
+  .flow .arr { transform: rotate(90deg); justify-self: center; }
+  .loop-back { margin-inline: 0; }
+}
+
+/* ---------- games ---------- */
+.game { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 1.6rem; align-items: start; }
+@media (max-width: 800px) { .game { grid-template-columns: 1fr; } }
+.prompt-text { font-family: var(--font-display); font-stretch: 108%; font-weight: 750; font-size: clamp(1.5rem, 4.2vw, 2.4rem); line-height: 1.2; text-wrap: balance; }
+.blank { display: inline-block; min-width: 4.5ch; border-bottom: 4px dashed var(--accent); color: var(--accent); text-align: center; padding: 0 .2em; }
+.blank.filled { border-bottom-style: solid; animation: pop .45s ease; }
+@keyframes pop { 0% { transform: scale(.85); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
+.bars { display: grid; gap: .55rem; }
+.bar-row { display: grid; grid-template-columns: minmax(4.5rem, 8.5rem) minmax(0, 1fr) 3.4rem; gap: .7rem; align-items: center; }
+.bar-word { font-family: var(--font-mono); font-weight: 600; font-size: .9rem; overflow-wrap: anywhere; }
+.bar-track { height: 1.35rem; background: var(--blue-soft); border-radius: 6px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; width: 0; background: var(--blue); border-radius: 6px; transition: width .8s cubic-bezier(.2,.8,.2,1); }
+.bar-num { font-family: var(--font-mono); font-size: .85rem; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.bar-row.top .bar-fill, .bar-row.picked .bar-fill { background: var(--accent); }
+.bar-row.picked .bar-word, .bar-row.top .bar-word { color: var(--accent); }
+.bar-row.other .bar-fill { background: var(--line); }
+.bar-row.other .bar-word { color: var(--muted); font-weight: 400; }
+.game-note { padding: .8rem 1rem; border-radius: 12px; background: var(--blue-soft); color: var(--fg); font-size: .95rem; }
+.game-note strong { color: var(--blue); }
+
+.gen-text { font-family: var(--font-display); font-stretch: 105%; font-weight: 700; font-size: clamp(1.3rem, 3.4vw, 1.9rem); line-height: 1.35; min-height: 2.8em; }
+.gen-text .w { display: inline-block; margin-right: .28em; }
+.gen-text .w.gen { color: var(--accent); animation: tokIn .35s ease both; }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.chip { font: inherit; font-family: var(--font-mono); font-size: .82rem; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg); padding: .3rem .7rem; border-radius: 999px; cursor: pointer; }
+.chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.temp { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .8rem; align-items: center; }
+.temp input { width: 100%; accent-color: var(--accent); }
+.temp output { font-family: var(--font-mono); font-variant-numeric: tabular-nums; min-width: 3ch; }
+.verdict { font-weight: 700; padding: .6rem .9rem; border-radius: 10px; }
+.verdict.new { background: var(--accent-soft); color: var(--accent); }
+.verdict.seen { background: var(--blue-soft); color: var(--blue); }
+.bar-track { position: relative; }
+.bar-fill { position: relative; }
+.bar-tick { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; background: var(--fg); opacity: .75; transition: left .3s ease; }
+.bar-row.t4 { grid-template-columns: minmax(4.5rem, 7.5rem) minmax(0, 1fr) 3.4rem 2.4rem; }
+.bar-tally { font-family: var(--font-mono); font-size: .8rem; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bar-word .wrong { font-family: var(--font-body); font-size: .7rem; font-weight: 700; color: var(--bad); margin-left: .3em; }
+.blank.bad { color: var(--bad); border-bottom-color: var(--bad); }
+.game-note.bad { background: var(--bad-soft); }
+.game-note.bad strong { color: var(--bad); }
+details.corpus summary { cursor: pointer; font-size: .85rem; color: var(--muted); }
+details.corpus ol { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); columns: 2; column-gap: 1.5rem; margin-top: .5rem; max-height: 11rem; overflow-y: auto; }
+details.corpus li + li { margin-top: .1em; }
+@media (max-width: 640px) { details.corpus ol { columns: 1; } }
+
+/* ---------- table ---------- */
+.tbl-wrap { overflow-x: auto; }
+table.cmp { border-collapse: collapse; width: 100%; font-size: 1rem; }
+table.cmp th, table.cmp td { text-align: left; padding: .7rem .9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.cmp thead th { font-family: var(--font-display); font-stretch: 105%; font-size: 1.05rem; }
+table.cmp tbody th { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; white-space: nowrap; }
+table.cmp td.same { color: var(--accent); font-weight: 700; }
+
+/* ---------- s9 genai vs agent ---------- */
+.stack-v { display: flex; flex-direction: column; align-items: center; gap: .35rem; }
+.stack-v .box { width: 100%; max-width: 18rem; text-align: center; padding: .6rem .8rem; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); }
+.stack-v .box.llm { background: var(--blue); color: var(--surface); border-color: var(--blue); font-family: var(--font-display); font-weight: 800; }
+.stack-v .down { color: var(--muted); font-weight: 700; }
+.tool-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .45rem; }
+.tool-grid > div { padding: .55rem .5rem; border-radius: 10px; border: 1.5px dashed var(--line); text-align: center; font-size: .85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; min-height: 3.2rem; }
+.tool-grid .core { border: none; background: var(--accent); color: var(--on-accent); font-family: var(--font-display); font-stretch: 110%; font-size: 1rem; flex-direction: column; line-height: 1.15; }
+.tool-grid .core small { font-family: var(--font-mono); font-size: .62rem; font-weight: 400; opacity: .9; }
+.tool-grid .lock { border-color: var(--warn); color: var(--warn); }
+
+/* ---------- s10 agent loop ---------- */
+.agent { display: grid; grid-template-columns: minmax(0, 27rem) minmax(0, 1fr); gap: 1.6rem; align-items: start; }
+@media (max-width: 800px) { .agent { grid-template-columns: 1fr; } .agent svg { max-width: 14rem; justify-self: center; } }
+.agent svg { width: 100%; max-width: 15rem; height: auto; overflow: visible; display: block; margin-inline: auto; }
+#agent-code { font-size: .88rem; }
+.ring { fill: none; stroke: var(--line); stroke-width: 2; }
+.arc { fill: none; stroke: var(--muted); stroke-width: 2.5; }
+.arrowhead { fill: var(--muted); }
+.lnode circle { fill: var(--surface); stroke: var(--line); stroke-width: 3; transition: fill .25s, stroke .25s; }
+.lnode text { fill: var(--fg); font-family: var(--font-display); font-weight: 800; font-size: 15px; text-anchor: middle; dominant-baseline: middle; letter-spacing: .04em; }
+.lnode.on circle { fill: var(--accent); stroke: var(--accent); }
+.lnode.on text { fill: var(--on-accent); }
+.loop-count { fill: var(--muted); font-family: var(--font-mono); font-size: 13px; text-anchor: middle; }
+.loop-count.big { fill: var(--fg); font-family: var(--font-display); font-size: 30px; font-weight: 800; }
+.goal { font-family: var(--font-display); font-stretch: 105%; font-weight: 700; font-size: 1.15rem; }
+.log { list-style: none; padding: 0; margin: 0; display: grid; gap: .35rem; max-height: 15rem; overflow-y: auto; font-size: .88rem; }
+.log li { margin: 0; display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: .6rem; align-items: baseline; animation: tokIn .3s ease both; }
+.log .ph { font-family: var(--font-mono); font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: .15em .5em; border-radius: 6px; text-align: center; }
+.log .ph.think { background: var(--blue-soft); color: var(--blue); }
+.log .ph.act { background: var(--accent-soft); color: var(--accent); }
+.log .ph.observe { background: var(--good-soft); color: var(--good); }
+.log .ph.done { background: var(--fg); color: var(--bg); }
+.log .tx { overflow-wrap: anywhere; }
+.log .tx.mono { font-family: var(--font-mono); font-size: .8rem; }
+
+/* ---------- s11 permissions ---------- */
+.perm { display: grid; gap: .5rem; }
+.perm div { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .55rem .8rem; border-bottom: 1px solid var(--line); }
+.perm div:last-child { border-bottom: none; }
+
+/* ---------- s12 steps ---------- */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; counter-reset: st; }
+.steps .card { position: relative; }
+.steps .num { font-family: var(--font-display); font-stretch: 120%; font-weight: 900; font-size: 2.2rem; line-height: 1; color: var(--accent); }
+@media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
+
+/* ---------- s13 rag vs tables ---------- */
+.mini-flow { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; font-size: .85rem; font-weight: 700; }
+.mini-flow span.b { padding: .3rem .6rem; border-radius: 8px; background: var(--good-soft); color: var(--good); }
+.mini-flow span.a { color: var(--muted); }
+.fake-table { overflow-x: auto; }
+.fake-table table { border-collapse: collapse; font-family: var(--font-mono); font-size: .72rem; width: 100%; }
+.fake-table th, .fake-table td { padding: .3rem .5rem; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+.fake-table th { color: var(--muted); font-weight: 600; }
+.fake-table td.more { color: var(--bad); font-weight: 600; text-align: center; }
+
+/* ---------- s12r/s12q RAG pipelines ---------- */
+.pipe { display: flex; flex-wrap: wrap; align-items: stretch; gap: .4rem; }
+.pn {
+  flex: 1 1 0; min-width: 7.5rem; text-align: left; font: inherit; cursor: pointer; color: var(--fg);
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px; padding: .6rem .8rem;
+  display: flex; flex-direction: column; gap: .15rem; transition: border-color .25s, box-shadow .25s, background .25s;
+}
+.pn .k { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.pn b { font-family: var(--font-display); font-stretch: 105%; font-size: .98rem; line-height: 1.15; }
+.pn.done { border-color: var(--blue); }
+.pn.cur { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 4px var(--accent-soft); }
+.pn.cur .k { color: var(--accent); }
+.pa { align-self: center; color: var(--accent); font-weight: 700; font-size: 1.2rem; }
+@media (max-width: 700px) { .pa { display: none; } .pn { flex-basis: 40%; } }
+.pipe-box { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 1.4rem; align-items: start; }
+@media (max-width: 860px) { .pipe-box { grid-template-columns: 1fr; } }
+.pipe-view { min-width: 0; display: flex; flex-direction: column; gap: .5rem; animation: tokIn .35s ease both; }
+.pdf-page { width: min(100%, 17rem); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: .8rem .9rem 1rem; box-shadow: 4px 4px 0 var(--line); display: flex; flex-direction: column; gap: .35rem; }
+.pdf-page .ph { font-family: var(--font-display); font-weight: 800; font-size: .85rem; }
+.pdf-page .ln-bar { height: .42rem; border-radius: 3px; background: var(--line); }
+.pdf-page .hl-line { font-size: .7rem; line-height: 1.3; padding: .2rem .35rem; border-radius: 4px; background: var(--warn-soft); }
+.chunks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+@media (max-width: 640px) { .chunks { grid-template-columns: 1fr; } }
+.chunk { border: 1.5px dashed var(--blue); border-radius: 8px; padding: .45rem .6rem; font-size: .8rem; line-height: 1.35; display: flex; flex-direction: column; gap: .2rem; }
+.chunk .pg { font-family: var(--font-mono); font-size: .64rem; font-weight: 600; color: var(--blue); letter-spacing: .06em; text-transform: uppercase; }
+.chunk.hit { border-style: solid; border-color: var(--good); background: var(--good-soft); }
+.chunk.hit .pg { color: var(--good); }
+.chunk.bad-chunk { border-color: var(--bad); font-family: var(--font-mono); font-size: .72rem; }
+.chunk.bad-chunk .pg { color: var(--bad); }
+.vec-rows { display: grid; gap: .45rem; }
+.vec-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.1fr); gap: .5rem; align-items: center; font-size: .78rem; }
+.vec-row .arrow { color: var(--accent); font-weight: 700; }
+.vec { font-family: var(--font-mono); font-size: .72rem; padding: .3rem .5rem; border-radius: 6px; background: var(--code-bg); color: var(--code-fg); overflow-x: auto; white-space: nowrap; }
+.q-bubble { align-self: flex-end; max-width: 26rem; padding: .7rem 1rem; border-radius: 16px 16px 4px 16px; background: var(--blue); color: var(--surface); font-weight: 700; }
+.a-bubble { max-width: 30rem; padding: .7rem 1rem; border-radius: 16px 16px 16px 4px; background: var(--good-soft); color: var(--fg); }
+.a-bubble .cite { display: inline-block; margin-top: .35rem; font-family: var(--font-mono); font-size: .7rem; color: var(--good); font-weight: 600; }
+
+/* ---------- s14 pipeline ---------- */
+.stages { display: flex; flex-wrap: wrap; gap: .4rem; }
+.stage-btn { font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; padding: .4rem .75rem; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--muted); }
+.stage-btn.done { color: var(--fg); border-color: var(--blue); }
+.stage-btn.cur { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.stage-btn .n { font-family: var(--font-mono); font-size: .75em; opacity: .75; margin-right: .3em; }
+.pipe-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, .6fr); gap: 1.2rem; align-items: start; }
+@media (max-width: 900px) { .pipe-detail { grid-template-columns: 1fr; } }
+.meter { display: flex; flex-direction: column; gap: .25rem; }
+.meter .lbl { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.meter .val { font-family: var(--font-display); font-stretch: 112%; font-weight: 850; font-size: 1.9rem; line-height: 1.05; color: var(--accent); font-variant-numeric: tabular-nums; }
+.analogy { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .9rem; align-items: center; padding: .8rem 1rem; border-radius: 12px; background: var(--blue-soft); }
+.analogy .tag { font-family: var(--font-mono); font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); }
+
+/* ---------- s16 rules ---------- */
+.rules { list-style: none; padding: 0; margin: 0; display: grid; gap: .75rem; }
+.rules li { margin: 0; display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: .7rem; align-items: start; }
+.rules .n { font-family: var(--font-display); font-stretch: 120%; font-weight: 900; font-size: 1.4rem; line-height: 1.1; color: var(--accent); }
+.rules b { display: block; font-family: var(--font-display); font-stretch: 105%; font-size: 1.05rem; }
+.rules span { color: var(--muted); font-size: .92rem; }
+
+/* ---------- s17 merge ---------- */
+.merge { position: relative; height: 21rem; max-width: 46rem; width: 100%; margin-inline: auto; }
+.slot { position: absolute; transform: translate(-50%, -50%); }
+.role { display: block; padding: .5rem .9rem; border-radius: 999px; background: var(--surface); border: 1.5px solid var(--blue); color: var(--blue); font-weight: 700; font-size: .9rem; white-space: nowrap; transition: transform .8s cubic-bezier(.6,0,.3,1), opacity .8s ease; }
+.merge.merged .role { opacity: 0; }
+.fde-core {
+  position: absolute; left: 50%; top: 50%; width: 9.5rem; height: 9.5rem; margin: -4.75rem 0 0 -4.75rem;
+  border-radius: 50%; border: 2px dashed var(--line); color: var(--muted);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: .15rem;
+  transition: transform .8s cubic-bezier(.2,.8,.2,1) .35s, background .5s ease .35s, color .5s ease .35s, border-color .5s ease .35s;
+  transform: scale(.78);
+}
+.fde-core b { font-family: var(--font-display); font-stretch: 125%; font-weight: 900; font-size: 2.2rem; line-height: 1; }
+.fde-core small { font-size: .7rem; line-height: 1.2; max-width: 7.5rem; }
+.merge.merged .fde-core { transform: scale(1.15); background: var(--accent); border: 2px solid var(--accent); color: var(--on-accent); }
+@media (max-width: 640px) { .role { font-size: .72rem; padding: .35rem .6rem; } .merge { height: 18rem; } }
+
+/* ---------- s18 fde ---------- */
+.fde-path { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; }
+.fde-path .card { padding: .8rem .9rem; gap: .3rem; }
+.fde-path .k { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+@media (max-width: 800px) { .fde-path { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- s19 tutor ---------- */
+.bubbles { display: grid; gap: .5rem; }
+.bubble { padding: .65rem .9rem; border-radius: 14px 14px 14px 4px; font-size: .95rem; }
+.bubble.no { background: var(--bad-soft); color: var(--fg); text-decoration: line-through; text-decoration-color: var(--bad); text-decoration-thickness: 2px; }
+.bubble.yes { background: var(--good-soft); color: var(--fg); }
+.col-head { display: flex; align-items: center; gap: .6rem; }
+.ask-words { display: flex; gap: .6rem; flex-wrap: wrap; }
+.ask-words span { font-family: var(--font-display); font-stretch: 120%; font-weight: 900; font-size: clamp(1.5rem, 4.5vw, 2.4rem); color: var(--accent); }
+.ask-words span:nth-child(2) { color: var(--blue); }
+
+.pairs { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: .6rem 1rem; align-items: center; }
+.pairs .ask { font-family: var(--font-display); font-stretch: 120%; font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 1.8rem); color: var(--accent); white-space: nowrap; }
+.pairs .ask.alt { color: var(--blue); }
+@media (max-width: 800px) { .pairs { grid-template-columns: 1fr; } .pairs .spacer { display: none; } }
+
+/* ---------- s20 pyramid ---------- */
+.pyramid { display: flex; flex-direction: column-reverse; align-items: center; gap: .35rem; }
+.layer { width: var(--w); max-width: 100%; padding: .55rem 1rem; border-radius: 10px; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: .2rem .6rem; }
+.layer b { font-family: var(--font-display); font-stretch: 108%; font-size: 1.05rem; }
+.layer span { font-size: .82rem; opacity: .85; }
+.layer.l1 { background: var(--fg); color: var(--bg); }
+.layer.l2 { background: var(--blue); color: var(--surface); }
+.layer.l3 { background: var(--blue-soft); color: var(--fg); border: 1.5px solid var(--blue); }
+.layer.l4 { background: var(--surface); color: var(--fg); border: 1.5px solid var(--line); }
+.layer.l5 { background: var(--accent-soft); color: var(--fg); border: 1.5px solid var(--accent); }
+.layer.l6 { background: var(--accent); color: var(--on-accent); }
+@media (max-width: 640px) { .layer { width: 100%; } }
+
+/* ---------- s21 math ---------- */
+.math svg { width: 100%; height: auto; display: block; }
+.ax { stroke: var(--line); stroke-width: 1.5; }
+.pt { fill: var(--blue); }
+.pt.food { fill: var(--accent); }
+.pt.place { fill: var(--good); }
+.pt-label { fill: var(--fg); font-family: var(--font-mono); font-size: 10px; }
+.cluster { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.curve { fill: none; stroke: var(--blue); stroke-width: 3; }
+.ball { fill: var(--accent); }
+.ballg { transition: transform .45s cubic-bezier(.3,.7,.3,1); }
+.loss { fill: var(--muted); font-family: var(--font-mono); font-size: 11px; }
+.min-dot { fill: var(--muted); }
+.min-label { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; text-anchor: middle; }
+.min-label.global { fill: var(--good); }
+.min-label.local { fill: var(--bad); }
+.btn.sm { font-size: .78rem; padding: .35rem .75rem; }
+#gd-status { min-height: 1.6em; }
+#gd-status .pill { white-space: normal; }
+
+/* ---------- s21b backprop ---------- */
+.bp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.4rem; align-items: start; }
+.bp > div { min-width: 0; display: flex; flex-direction: column; gap: .8rem; }
+@media (max-width: 860px) { .bp { grid-template-columns: 1fr; } }
+.bp svg { width: 100%; height: auto; display: block; overflow: visible; }
+.bp-node circle { fill: var(--surface); stroke: var(--line); stroke-width: 3; transition: stroke .3s; }
+.bp-big { fill: var(--fg); font-family: var(--font-display); font-weight: 800; font-size: 17px; text-anchor: middle; }
+.bp-small { fill: var(--muted); font-family: var(--font-mono); font-size: 10.5px; text-anchor: middle; }
+.bp-val { fill: var(--fg); font-family: var(--font-mono); font-weight: 600; font-size: 12px; text-anchor: middle; }
+.bp-fwd { stroke: var(--blue); stroke-width: 3; opacity: .35; transition: opacity .3s; }
+.bp-back { fill: none; stroke: var(--accent); stroke-width: 3; stroke-dasharray: 7 6; opacity: .18; transition: opacity .3s; }
+.bp-grad { fill: var(--accent); font-family: var(--font-mono); font-weight: 600; font-size: 12px; text-anchor: middle; opacity: .35; transition: opacity .3s; }
+.bp-mk-f { fill: var(--blue); }
+.bp-mk-b { fill: var(--accent); }
+.bp-target { stroke: var(--muted); stroke-width: 2; }
+svg[data-phase="forward"] .bp-fwd { opacity: 1; stroke-dasharray: 8 5; animation: bpflow .8s linear infinite; }
+svg[data-phase="forward"] .bp-node circle { stroke: var(--blue); }
+svg[data-phase="backward"] .bp-back { opacity: 1; animation: bpflow .8s linear infinite; }
+svg[data-phase="backward"] .bp-grad { opacity: 1; }
+svg[data-phase="update"] .bp-grad { opacity: 1; }
+svg[data-phase="update"] #bp-w { fill: var(--accent); }
+@keyframes bpflow { to { stroke-dashoffset: -26; } }
+.bp-phase { align-self: flex-start; }
+.bp-table { max-height: 9.5rem; overflow-y: auto; border: 1px solid var(--line); border-radius: 10px; }
+.bp-table table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: .76rem; font-variant-numeric: tabular-nums; }
+.bp-table th, .bp-table td { padding: .3rem .6rem; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.bp-table th { position: sticky; top: 0; background: var(--surface); color: var(--muted); font-weight: 600; }
+.bp-table td:first-child, .bp-table th:first-child { text-align: left; }
+.bp-table tr:last-child td { color: var(--accent); font-weight: 600; }
+.deep-strip { display: grid; gap: .25rem; font-size: .8rem; }
+.deep-strip .lane { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; }
+.deep-strip .lay { padding: .2rem .55rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--surface); font-weight: 700; }
+.deep-strip .f { color: var(--blue); font-weight: 700; }
+.deep-strip .b { color: var(--accent); font-weight: 700; }
+
+/* ---------- s21c deep network ---------- */
+.nn-wrap { width: 100%; min-width: 0; }
+#nn { display: block; width: 100%; }
+#nn-phase { transition: background .3s, color .3s; }
+
+/* ---------- s22 years ---------- */
+.year h3 { display: flex; align-items: baseline; gap: .5rem; }
+.year h3 .y { font-stretch: 125%; font-weight: 900; font-size: 1.8rem; color: var(--accent); }
+.year ul { font-size: .92rem; }
+.bim { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1rem; align-items: center; padding: .9rem 1.1rem; border-radius: var(--radius); border: 1.5px solid var(--blue); background: var(--blue-soft); }
+.bim .tag { font-family: var(--font-display); font-stretch: 125%; font-weight: 900; font-size: 1.5rem; color: var(--blue); }
+@media (max-width: 640px) { .bim { grid-template-columns: 1fr; } }
+
+/* ---------- s23a aws architecture ---------- */
+.aws-wrap { overflow-x: auto; }
+.aws { display: block; width: 100%; min-width: 640px; height: auto; max-height: 55vh; }
+.aws .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; transition: stroke .25s; }
+.aws .t { fill: var(--fg); font-family: var(--font-display); font-weight: 800; font-size: 15px; text-anchor: middle; }
+.aws .s { fill: var(--muted); font-family: var(--font-mono); font-size: 11.5px; text-anchor: middle; }
+.aws .cloud { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.aws .vpc { fill: var(--blue-soft); stroke: var(--blue); stroke-width: 1.5; }
+.aws .pub { fill: var(--good-soft); stroke: var(--good); stroke-width: 1.5; }
+.aws .priv { fill: var(--warn-soft); stroke: var(--warn); stroke-width: 1.5; }
+.aws .lbl { font-family: var(--font-mono); font-size: 11.5px; font-weight: 600; letter-spacing: .06em; }
+.aws .lbl.c { fill: var(--muted); } .aws .lbl.v { fill: var(--blue); } .aws .lbl.p { fill: var(--good); } .aws .lbl.r { fill: var(--warn); }
+.aws .edge { fill: none; stroke: var(--muted); stroke-width: 2; }
+.aws .edge.dash { stroke-dasharray: 5 5; }
+.aws .mk { fill: var(--muted); } .aws .mk.on { fill: var(--accent); }
+.aws .n { transition: opacity .3s; }
+.aws.focus .n { opacity: .25; }
+.aws.focus .n.on { opacity: 1; }
+.aws .n.on .box { stroke: var(--accent); stroke-width: 3; }
+.aws .edge.on { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 8 5; animation: bpflow .8s linear infinite; }
+.aws-ctl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem 1.5rem; align-items: center; }
+.aws-ctl > div:first-child { min-width: 0; display: flex; flex-direction: column; gap: .3rem; }
+@media (max-width: 760px) { .aws-ctl { grid-template-columns: 1fr; } }
+
+/* ---------- s24 takeaways ---------- */
+.takeaways { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+.takeaways li { margin: 0; display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 1rem; align-items: baseline; }
+.takeaways .n { font-family: var(--font-display); font-stretch: 125%; font-weight: 900; font-size: 2rem; color: var(--accent); line-height: 1; }
+.takeaways p { font-family: var(--font-display); font-stretch: 106%; font-weight: 700; font-size: clamp(1.15rem, 3vw, 1.6rem); line-height: 1.2; }
+
+.checklist { list-style: none; padding: 0; display: grid; gap: .6rem; }
+.checklist li { margin: 0; display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: .6rem; align-items: start; font-size: 1.1rem; }
+.checklist .box { width: 1.25rem; height: 1.25rem; border: 2.5px solid var(--accent); border-radius: 5px; margin-top: .2rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
+}
+</style>
+
+<div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+<main class="deck" id="deck">
+
+<!-- 1 ─ Title -->
+<section class="slide" id="s1">
+  <div class="wrap hero">
+    <p class="eyebrow">Career talk</p>
+    <h1 class="display">From ECE<br>to <span>GenAI</span></h1>
+    <div class="tokens" id="hero-tokens" aria-label="Becoming a software engineer in the age of AI agents">
+      <span class="tok" style="--i:0">Becoming<small>p 0.41</small></span>
+      <span class="tok" style="--i:1">a<small>p 0.93</small></span>
+      <span class="tok" style="--i:2">software<small>p 0.38</small></span>
+      <span class="tok" style="--i:3">engineer<small>p 0.72</small></span>
+      <span class="tok" style="--i:4">in<small>p 0.55</small></span>
+      <span class="tok" style="--i:5">the<small>p 0.81</small></span>
+      <span class="tok" style="--i:6">age<small>p 0.34</small></span>
+      <span class="tok" style="--i:7">of<small>p 0.97</small></span>
+      <span class="tok" style="--i:8">AI<small>p 0.46</small></span>
+      <span class="tok" style="--i:9">agents<small>p 0.29</small></span>
+      <span class="caret" aria-hidden="true"></span>
+    </div>
+    <p class="speaker"><strong>Shishir Subedi</strong> · Sr. AI and Backend Engineer @ QsystemsAI</p>
+    <p class="hint">→ / Space: next · ←: back · N: speaker notes · T: theme · F: fullscreen</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Introduce yourself in one line. Don't go into the journey yet.</li>
+    <li>Point at the subtitle: "Notice the small numbers under each word. By the end of today you'll know exactly what they mean. That's how ChatGPT writes."</li>
+  </ul></aside>
+</section>
+
+<!-- 3 ─ Journey -->
+<section class="slide" id="s3">
+  <div class="wrap">
+    <p class="eyebrow">My journey</p>
+    <h2>I didn't start in computer science</h2>
+    <ol class="timeline">
+      <li class="frag"><span class="dot"></span><div><p class="t">Electronics &amp; Communication Engineering</p><p class="d">Where I started. Circuits and signals, not code.</p></div></li>
+      <li class="frag key"><span class="dot"></span><div><p class="t">Data Mining elective</p><p class="d">The course that changed my direction.</p></div></li>
+      <li class="frag"><span class="dot"></span><div><p class="t">More CS electives</p><p class="d">AI, Databases and more in 3rd and 4th year.</p></div></li>
+      <li class="frag"><span class="dot"></span><div><p class="t">Final project in Python</p><p class="d">My first real thing built end to end.</p></div></li>
+      <li class="frag"><span class="dot"></span><div><p class="t">Python intern</p><p class="d">Learning how real software teams work.</p></div></li>
+      <li class="frag"><span class="dot"></span><div><p class="t">Full Stack Python Developer</p><p class="d">7+ years of Python since then.</p></div></li>
+      <li class="frag paused"><span class="dot"></span><div><p class="t">Master's in CS: Data Science &amp; Analytics</p><p class="d">Had to stop in the final semester. The learning stayed with me.</p></div></li>
+      <li class="frag key"><span class="dot"></span><div><p class="t">2023: ChatGPT API arrives</p><p class="d">Built my first GenAI project with no AI framework.</p></div></li>
+      <li class="frag"><span class="dot"></span><div><p class="t">GenAI for a US bank</p><p class="d">Through a Nepal company. A private ChatGPT-like platform.</p></div></li>
+      <li class="frag key"><span class="dot"></span><div><p class="t">Research paper published</p><p class="d">Tabular Embedding Model (TEM).</p></div></li>
+    </ol>
+  </div>
+  <aside class="notes"><ul>
+    <li>Press → to reveal each step. Tell one short story per step, not a lecture.</li>
+    <li>Data Mining elective: say what made it click for you.</li>
+    <li>Internship: be honest about what you didn't know on day one.</li>
+    <li>Master's: say it plainly. You had to stop in the final semester and couldn't go back. The dashed dot shows it. No need to explain the reason.</li>
+    <li>2023: "No LangChain, no frameworks. Just the API and Python." It shows fundamentals let you build without waiting for tools.</li>
+    <li>Keep the bank's name private. "A US bank" is enough.</li>
+  </ul></aside>
+</section>
+
+<!-- 4 ─ Lesson -->
+<section class="slide" id="s4">
+  <div class="wrap">
+    <p class="eyebrow">What I learned from it</p>
+    <p class="big">I didn't have a perfect plan. I followed what made me curious, and I kept building.</p>
+    <div class="chain" aria-label="Curiosity, elective, project, internship, job, research">
+      <span class="step">Curiosity</span><span class="arrow">→</span>
+      <span class="step">Elective</span><span class="arrow">→</span>
+      <span class="step">Project</span><span class="arrow">→</span>
+      <span class="step">Internship</span><span class="arrow">→</span>
+      <span class="step">Job</span><span class="arrow">→</span>
+      <span class="step">Research</span>
+    </div>
+    <p class="lead frag">Not everything went to plan. I had to leave my master's in the final semester. My career kept growing anyway, because I kept building.</p>
+    <p class="lead frag">If you're in 1st year and still confused about what you want, that's normal. Pick something, build it, and see what you enjoy.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Main message: projects opened every door, not marks alone.</li>
+    <li>The master's line matters: students fear failing or dropping out. Show them an unfinished degree didn't end your career.</li>
+    <li>Look at the 1st years when you say the last line.</li>
+  </ul></aside>
+</section>
+
+<!-- 5 ─ LLM = next word -->
+<section class="slide" id="s5">
+  <div class="wrap">
+    <p class="eyebrow">Part 1 · What is an LLM?</p>
+    <h2>ChatGPT is a very good next-word predictor</h2>
+    <p class="lead">It reads the words so far, scores every possible next word, picks one, adds it, and repeats. It does this so well that we often can't tell AI writing from human writing.</p>
+    <div>
+      <div class="flow">
+        <div class="node"><span class="lbl">Words so far</span><span class="val">"The capital of Nepal is"</span></div>
+        <span class="arr" aria-hidden="true">→</span>
+        <div class="node"><span class="lbl">The model</span><span class="val">Scores every word piece it knows</span></div>
+        <span class="arr" aria-hidden="true">→</span>
+        <div class="node"><span class="lbl">Probabilities</span>
+          <div class="mini-bars">
+            <div><span>Kathmandu</span><i style="width:91%"></i></div>
+            <div><span>a</span><i style="width:6%"></i></div>
+            <div><span>located</span><i style="width:4%"></i></div>
+          </div>
+        </div>
+        <span class="arr" aria-hidden="true">→</span>
+        <div class="node"><span class="lbl">Pick one</span><span class="val accent">"Kathmandu"</span></div>
+      </div>
+      <p class="loop-back">↺ Add the word to the text, then predict again, until the answer is finished</p>
+    </div>
+    <p class="quote frag">It generates. It does not check. That's why it can sound confident and still be wrong.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Ask the room: "The capital of Nepal is ___?" Everyone says Kathmandu. "You just did what an LLM does."</li>
+    <li>Explain: a sentence of 20 words = this loop running 20 times.</li>
+    <li>Old ChatGPT (early 2023) only did this, answering from what it learned in training.</li>
+  </ul></aside>
+</section>
+
+<!-- 6 ─ Game 1 -->
+<section class="slide" id="s6">
+  <div class="wrap">
+    <div class="row" style="justify-content:space-between">
+      <p class="eyebrow">Game 1 · You are the model</p>
+      <span class="pill blue" id="g1-round">Round 1 of 6</span>
+    </div>
+    <h2>Guess the next word</h2>
+    <div class="game">
+      <div style="display:flex;flex-direction:column;gap:1.1rem">
+        <p class="prompt-text"><span id="g1-prompt">The capital of Nepal is</span> <span class="blank" id="g1-blank">?</span></p>
+        <p class="muted small">Shout your guess first. Then reveal what a model would predict.</p>
+        <div class="row">
+          <button class="btn primary" id="g1-reveal" type="button">Reveal the model's guess</button>
+          <button class="btn" id="g1-next" type="button">Next round</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.9rem">
+        <div class="bars" id="g1-bars" aria-live="polite"></div>
+        <p class="game-note" id="g1-note" hidden></p>
+        <p class="caption">Numbers are illustrative, shaped like a real model's output.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Read each prompt aloud. Let students shout. Then click Reveal.</li>
+    <li>Round 2 (Dal bhat power): they'll love it. Point out the model learned this from text people wrote.</li>
+    <li>Round 4 (assignment): "Even the model knows students say tomorrow."</li>
+    <li>Round 6 is the key one: flat bars mean the model is unsure. That's where creativity, and also mistakes, come from.</li>
+  </ul></aside>
+</section>
+
+<!-- 6b ─ Temperature playground -->
+<section class="slide" id="s6t">
+  <div class="wrap">
+    <p class="eyebrow">Game 2 · Temperature</p>
+    <h2>Turn up the temperature, and rare words get a chance</h2>
+    <div class="game">
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="chips" id="tp-prompts" role="group" aria-label="Choose a sentence"></div>
+        <p class="prompt-text"><span id="tp-prompt"></span> <span class="blank" id="tp-blank">?</span></p>
+        <div class="temp">
+          <label for="tp-temp" class="small"><b>Temperature</b></label>
+          <input type="range" id="tp-temp" min="0" max="2" step="0.1" value="1">
+          <output id="tp-temp-out" for="tp-temp">1.0</output>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="tp-one" type="button">Pick 1 word</button>
+          <button class="btn" id="tp-many" type="button">Pick 20 times</button>
+          <button class="btn" id="tp-clear" type="button">Clear picks</button>
+        </div>
+        <p class="game-note" id="tp-note" aria-live="polite"></p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.9rem">
+        <div class="bars" id="tp-bars"></div>
+        <p class="caption">Bar: chance at this temperature. Dark tick: the model's normal chance (temperature 1). Right column: how many times each word was picked. Numbers are illustrative.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Start with the food sentence at temperature 1. Click "Pick 20 times": mostly momo, sometimes chowmein, rarely gundruk.</li>
+    <li>Drag to 0 and pick 20 times: momo every time. "This is why ChatGPT can feel repetitive."</li>
+    <li>Drag to 2 and pick 20 times: the bars flatten and gundruk and laphing start winning. "More creative."</li>
+    <li>Then switch to "The capital of Nepal is" at temperature 2 and pick 20 times. Sooner or later it says Pokhara or Lalitpur. "High temperature on a fact question gives a confident wrong answer. That's a hallucination."</li>
+    <li>Takeaway: low temperature for facts and code, higher for stories and brainstorming.</li>
+  </ul></aside>
+</section>
+
+<!-- 7 ─ Game 3 -->
+<section class="slide" id="s7">
+  <div class="wrap">
+    <p class="eyebrow">Game 3 · A tiny language model, running live</p>
+    <h2>Watch a model write, one word at a time</h2>
+    <div class="game">
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <p class="gen-text" id="g2-text" aria-live="polite"></p>
+        <div class="chips" id="g2-starts" role="group" aria-label="Starting words"></div>
+        <div class="temp">
+          <label for="g2-temp" class="small"><b>Temperature</b></label>
+          <input type="range" id="g2-temp" min="0" max="2" step="0.1" value="1">
+          <output id="g2-temp-out" for="g2-temp">1.0</output>
+        </div>
+        <p class="caption" id="g2-temp-help">1.0 picks words in proportion to how often it saw them.</p>
+        <div class="row">
+          <button class="btn primary" id="g2-step" type="button">Next word</button>
+          <button class="btn" id="g2-auto" type="button">Write the whole sentence</button>
+          <button class="btn" id="g2-reset" type="button">Start over</button>
+        </div>
+        <p class="verdict" id="g2-verdict" hidden></p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.9rem">
+        <p class="small"><b>Candidates for the next word</b> <span class="muted">(looking at the last 2 words: <span class="mono" id="g2-ctx"></span>)</span></p>
+        <div class="bars" id="g2-bars"></div>
+        <details class="corpus">
+          <summary>What it learned from: <span id="g2-count"></span> sentences</summary>
+          <ol id="g2-corpus"></ol>
+        </details>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>This is a real (tiny) model running in the browser. It counts which word followed which 2 words in its training sentences.</li>
+    <li>Pick "i love" and press Next word a few times. Show the bars changing after each word.</li>
+    <li>Set temperature to 0: it always picks the top word, so the same sentence every time. Set it to 2: more random.</li>
+    <li>When it says "This sentence is not in the training text", stop and say: "It never saw this sentence. It made it up from patterns. That's generation, and it's also how hallucination happens."</li>
+  </ul></aside>
+</section>
+
+<!-- 8 ─ Toy vs real -->
+<section class="slide" id="s8">
+  <div class="wrap">
+    <p class="eyebrow">Same idea, much bigger</p>
+    <h2>Our toy model vs a real LLM</h2>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><td></td><th scope="col">Our toy model</th><th scope="col">A real LLM (ChatGPT, Claude, Gemini)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Learned from</th><td>23 sentences</td><td>Trillions of words: books, websites, code</td></tr>
+          <tr><th scope="row">Looks at</th><td>The last 2 words</td><td>The whole conversation and long documents</td></tr>
+          <tr><th scope="row">Knows</th><td>75 words</td><td>Many languages, code, math, Nepali too</td></tr>
+          <tr><th scope="row">Learns by</th><td>Counting</td><td>A neural network with billions of numbers, tuned with calculus</td></tr>
+          <tr><th scope="row">Job</th><td class="same">Predict the next word</td><td class="same">Predict the next word</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead">Early ChatGPT (2023) could only do this: answer from what it learned in training. No internet, no actions. Then things changed.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>The last row is the point: the core idea is identical. Scale and the neural network make the difference.</li>
+    <li>Transition: "But just talking isn't that useful. What if it could <em>do</em> things?"</li>
+  </ul></aside>
+</section>
+
+<!-- 9 ─ GenAI vs agent -->
+<section class="slide" id="s9">
+  <div class="wrap">
+    <p class="eyebrow">Part 2 · AI agents</p>
+    <h2>Generative AI talks. An AI agent acts.</h2>
+    <div class="cols-2">
+      <div class="card">
+        <h3>Generative AI <span class="muted small">(ChatGPT, early 2023)</span></h3>
+        <div class="stack-v">
+          <div class="box">You: "How do I buy a gaming mouse?"</div>
+          <span class="down" aria-hidden="true">↓</span>
+          <div class="box llm">LLM</div>
+          <span class="down" aria-hidden="true">↓</span>
+          <div class="box">Text: "Go to a store website, search…"</div>
+        </div>
+        <p class="small muted">Only gives answers. Knows only what it was trained on. You do the work.</p>
+      </div>
+      <div class="card">
+        <h3>AI agent <span class="muted small">(LLM + tools + a loop)</span></h3>
+        <div class="tool-grid">
+          <div>Web search</div><div>Browser</div><div>Run code</div>
+          <div>Files</div><div class="core">LLM<small>the brain</small></div><div>Email</div>
+          <div>Database</div><div>Calendar</div><div class="lock">Payments</div>
+        </div>
+        <p class="small muted">You: <b style="color:var(--fg)">"Buy me a gaming mouse under Rs. 5,000."</b> It searches, compares, adds to cart and pays for you.</p>
+      </div>
+    </div>
+    <p class="quote">Brain = the LLM. Hands = the tools. The loop = it keeps working until the job is done.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Analogy: chatbot = a smart senior you ask questions; agent = an intern who actually does the task.</li>
+    <li>Payments is highlighted on purpose. We'll come back to it in two slides.</li>
+  </ul></aside>
+</section>
+
+<!-- 10 ─ Agent loop -->
+<section class="slide" id="s10">
+  <div class="wrap">
+    <p class="eyebrow">How an agent works</p>
+    <h2>An agent is a <code>while</code> loop with a brain</h2>
+    <div class="agent">
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <svg viewBox="0 0 300 300" role="img" aria-label="The agent loop: think, act, observe, then repeat">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="arrowhead" d="M0 0 L10 5 L0 10 z"></path>
+            </marker>
+          </defs>
+          <circle class="ring" cx="150" cy="150" r="105" stroke-dasharray="3 7"></circle>
+          <path class="arc" d="M192.7 54.1 A105 105 0 0 1 254.4 161" marker-end="url(#ah)"></path>
+          <path class="arc" d="M211.7 234.9 A105 105 0 0 1 88.3 234.9" marker-end="url(#ah)"></path>
+          <path class="arc" d="M45.6 161 A105 105 0 0 1 107.3 54.1" marker-end="url(#ah)"></path>
+          <g class="lnode" id="ln-think"><circle cx="150" cy="45" r="40"></circle><text x="150" y="46">THINK</text></g>
+          <g class="lnode" id="ln-act"><circle cx="240.9" cy="202.5" r="40"></circle><text x="240.9" y="203.5">ACT</text></g>
+          <g class="lnode" id="ln-observe"><circle cx="59.1" cy="202.5" r="40"></circle><text x="59.1" y="203.5" style="font-size:12px">OBSERVE</text></g>
+          <text class="loop-count" x="150" y="135">loop</text>
+          <text class="loop-count big" x="150" y="168" id="loop-n">0</text>
+        </svg>
+        <pre class="code" id="agent-code"><span class="ln" data-l="0">while (!task_done) {</span><span class="ln" data-l="think">    thought = think(goal, history);</span><span class="ln" data-l="act">    result  = act(thought);   <span class="dim">// use a tool</span></span><span class="ln" data-l="observe">    history = observe(result);</span><span class="ln" data-l="4">}</span><span class="ln" data-l="done">report_to_user();</span></pre>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.9rem;min-width:0">
+        <p class="goal">Goal: "Buy me a gaming mouse under Rs. 5,000."</p>
+        <div class="row">
+          <button class="btn primary" id="ag-step" type="button">Next step</button>
+          <button class="btn" id="ag-play" type="button">Play</button>
+          <button class="btn" id="ag-reset" type="button">Reset</button>
+        </div>
+        <ol class="log" id="ag-log" aria-live="polite"></ol>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Point at the code: "You wrote while loops in your first C class. This is the same thing."</li>
+    <li>Click Next step slowly. At each phase say what the agent is doing.</li>
+    <li>Stop at the ask_user step: the agent asks before paying. That's a design choice made by an engineer, not by the AI.</li>
+  </ul></aside>
+</section>
+
+<!-- 11 ─ Safety -->
+<section class="slide" id="s11">
+  <div class="wrap">
+    <p class="eyebrow">Safety</p>
+    <h2>Give agents a key, not the master key</h2>
+    <div class="cols-2">
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <p class="lead">Agents act on your behalf, and they can make mistakes. Give them only the access the task needs.</p>
+        <ul>
+          <li><b>Least access.</b> Read-only wherever possible.</li>
+          <li><b>A human approves</b> anything that spends money or deletes data.</li>
+          <li><b>Never give an agent production access.</b> No live databases, no real credentials.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Shopping agent permissions</h3>
+        <div class="perm">
+          <div><span>Search the web</span><span class="pill good">Allowed</span></div>
+          <div><span>Browse the store</span><span class="pill good">Allowed</span></div>
+          <div><span>Add to cart</span><span class="pill good">Allowed</span></div>
+          <div><span>Pay with saved card</span><span class="pill warn">Ask human first</span></div>
+          <div><span>Change account password</span><span class="pill bad">Never</span></div>
+          <div><span>Company production database</span><span class="pill bad">Never</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Someone has to design these limits. That's a software engineer's job, and it needs security knowledge.</li>
+  </ul></aside>
+</section>
+
+<!-- 12 ─ Bank story -->
+<section class="slide" id="s12">
+  <div class="wrap">
+    <p class="eyebrow">Part 3 · A real project</p>
+    <h2>GenAI for a US bank, built from Nepal</h2>
+    <div class="steps">
+      <div class="card frag on">
+        <span class="num">1</span><h3>Research first</h3>
+        <p class="small">The bank did not adopt AI at first. We tested how it performs on banking data and whether it was safe to use.</p>
+      </div>
+      <div class="card frag">
+        <span class="num">2</span><h3>Then build</h3>
+        <p class="small">A private ChatGPT-like app for the bank: web search, data collection from third-party sites for analysis, and deep research.</p>
+      </div>
+      <div class="card frag">
+        <span class="num">3</span><h3>Deploy at scale</h3>
+        <p class="small">Full stack, deployed on scalable cloud infrastructure so many employees could use it.</p>
+      </div>
+    </div>
+    <p class="quote frag">In serious companies, "can we trust it?" comes before "can we build it?"</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Students think AI work is "call the API". Real work starts with research and trust.</li>
+    <li>Keep client details general. No bank name, no screenshots.</li>
+    <li>Mention you worked from Nepal, through a Nepal company. That makes it feel reachable.</li>
+  </ul></aside>
+</section>
+
+<!-- 12b ─ RAG: indexing pipeline -->
+<section class="slide" id="s12r">
+  <div class="wrap">
+    <p class="eyebrow">What is RAG? · Part 1 of 2</p>
+    <h2>RAG: an open-book exam for the LLM</h2>
+    <p class="lead">An LLM has never seen your college handbook. <b style="color:var(--fg)">RAG (Retrieval-Augmented Generation)</b> finds the right pages and adds them to the prompt.</p>
+    <div class="row">
+      <span class="pill red">Indexing pipeline · done once</span>
+      <span class="pill blue" style="opacity:.55">RAG pipeline · every question (next slide)</span>
+    </div>
+    <div class="pipe" id="rgi-nodes" role="group" aria-label="Indexing pipeline steps"></div>
+    <div class="pipe-box">
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <h3 id="rgi-title"></h3>
+        <p class="small" id="rgi-body"></p>
+        <div class="row" style="margin-top:.4rem">
+          <button class="btn" id="rgi-prev" type="button">Back</button>
+          <button class="btn primary" id="rgi-next" type="button">Next step</button>
+        </div>
+      </div>
+      <div class="pipe-view" id="rgi-view"></div>
+    </div>
+    <p class="caption">Example handbook, made up for this talk.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Open-book exam analogy: you don't memorise the book, you find the right page and answer from it.</li>
+    <li>Click through the 4 steps. PDF → chunks → embeddings → vector database.</li>
+    <li>Embeddings link back to the linear algebra slide later: similar meaning = nearby vectors.</li>
+    <li>Stress: this happens once, before any question is asked. Like making an index at the back of a book.</li>
+  </ul></aside>
+</section>
+
+<!-- 12c ─ RAG: query pipeline -->
+<section class="slide" id="s12q">
+  <div class="wrap">
+    <p class="eyebrow">What is RAG? · Part 2 of 2</p>
+    <h2>The RAG pipeline: answering a question</h2>
+    <div class="row">
+      <span class="pill red" style="opacity:.55">Indexing pipeline · done once</span>
+      <span class="pill blue">RAG pipeline · every question</span>
+    </div>
+    <div class="pipe" id="rgq-nodes" role="group" aria-label="RAG pipeline steps"></div>
+    <div class="pipe-box">
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <h3 id="rgq-title"></h3>
+        <p class="small" id="rgq-body"></p>
+        <div class="row" style="margin-top:.4rem">
+          <button class="btn" id="rgq-prev" type="button">Back</button>
+          <button class="btn primary" id="rgq-next" type="button">Next step</button>
+        </div>
+      </div>
+      <div class="pipe-view" id="rgq-view"></div>
+    </div>
+    <p class="quote">The LLM never learned your handbook. It read the right page at the moment you asked.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Same handbook as the last slide. Now a student asks a question.</li>
+    <li>Step 3 is the "retrieval" in Retrieval-Augmented Generation. Step 4 is the "augmented". Step 5 is the "generation".</li>
+    <li>Why it matters: answers come from your document with a page number, so less guessing and fewer hallucinations.</li>
+    <li>Transition: "This worked great for text. Then the bank asked about tables…"</li>
+  </ul></aside>
+</section>
+
+<!-- 13 ─ RAG vs tables -->
+<section class="slide" id="s13">
+  <div class="wrap">
+    <p class="eyebrow">The problem we hit</p>
+    <h2>RAG worked for text. Tables were a problem.</h2>
+    <p class="lead">Chunking works when each piece makes sense on its own. A paragraph does. A table row doesn't.</p>
+    <div class="cols-2">
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><h3>Text documents</h3><span class="pill good">Works</span></div>
+        <div class="mini-flow"><span class="b">PDF</span><span class="a">→</span><span class="b">Small chunks</span><span class="a">→</span><span class="b">Find relevant</span><span class="a">→</span><span class="b">LLM answers</span></div>
+        <div class="chunk"><span class="pg">chunk · page 7</span>"Students must have at least 80% attendance to sit for the board exam."</div>
+        <p class="small muted">One chunk holds a complete idea. The LLM can answer from it directly.</p>
+        <div class="chunk bad-chunk"><span class="pg">chunk · rows 100231–100233</span>100231, Branch 12, 38,500 · 100232, Branch 03, 12,000 · 100233, Branch 07, 55,250</div>
+        <p class="small muted">A chunk of table rows is a few random numbers. What's the average loan in 2024? No single chunk can tell you.</p>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><h3>Tables (CSV, database)</h3><span class="pill bad">Breaks</span></div>
+        <div class="fake-table">
+          <table>
+            <thead><tr><th>loan_id</th><th>branch</th><th>amount</th><th>issue_date</th></tr></thead>
+            <tbody>
+              <tr><td>100231</td><td>Branch 12</td><td>38,500</td><td>2024-02-11</td></tr>
+              <tr><td>100232</td><td>Branch 03</td><td>12,000</td><td>2024-02-11</td></tr>
+              <tr><td>100233</td><td>Branch 07</td><td>55,250</td><td>2024-02-12</td></tr>
+              <tr><td colspan="4" class="more">… 1,199,997 more rows</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">Too big to paste into the prompt. Cutting rows into chunks breaks totals and averages.</p>
+      </div>
+    </div>
+    <p class="caption">Example table. Not real bank data.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Ask: "If I give you 1 million rows and ask for the average, can you read them all?" No. Neither can the LLM.</li>
+    <li>When RAG first appeared, it was built for text. Nobody had a good answer for tables yet.</li>
+  </ul></aside>
+</section>
+
+<!-- 14 ─ TEM pipeline -->
+<section class="slide" id="s14">
+  <div class="wrap">
+    <p class="eyebrow">Our research · Tabular Embedding Model (TEM)</p>
+    <h2>Index the menu, not the kitchen</h2>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      <p>A bank manager doesn't read a million transactions. They ask an analyst to run the numbers, then decide from the summary.</p>
+    </div>
+    <div class="stages" id="tem-stages" role="group" aria-label="Pipeline stages"></div>
+    <div class="pipe-detail">
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <h3 id="tem-title"></h3>
+        <p class="small" id="tem-body"></p>
+        <div class="row" style="margin-top:.4rem">
+          <button class="btn" id="tem-prev" type="button">Back</button>
+          <button class="btn primary" id="tem-next" type="button">Next stage</button>
+        </div>
+      </div>
+      <pre class="code" id="tem-code"></pre>
+      <div class="meter">
+        <span class="lbl">Rows the LLM reads</span>
+        <span class="val" id="tem-rows"></span>
+        <span class="caption" id="tem-rows-note"></span>
+      </div>
+    </div>
+    <p class="caption">Example question and numbers, for illustration.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Walk through each stage with Next stage. Watch the "rows the LLM reads" number.</li>
+    <li>Key ideas: index metadata (column names and meanings), not raw rows. Let Python do the math in a sandbox. The LLM only reasons over the small, exact result.</li>
+    <li>Point out the subjects used: DBMS (metadata), Python, security (sandbox), AI. "This is why fundamentals matter."</li>
+  </ul></aside>
+</section>
+
+<!-- 15 ─ How I work -->
+<section class="slide" id="s15">
+  <div class="wrap">
+    <p class="eyebrow">Part 4 · How I work today</p>
+    <p class="big">I haven't seriously typed code in the last 1.5 years.</p>
+    <p class="big frag muted">Why would I? AI writes it faster than me.</p>
+    <p class="big frag accent">But I read, review and question every line. I can do that only because I wrote code by hand for years before.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Pause after the first line. Let it shock them.</li>
+    <li>The third line is the most important sentence of the talk. Don't rush it.</li>
+    <li>"AI is the junior developer. You must become the senior."</li>
+  </ul></aside>
+</section>
+
+<!-- 16 ─ Rules -->
+<section class="slide" id="s16">
+  <div class="wrap">
+    <p class="eyebrow">My rules for working with AI</p>
+    <h2>AI writes the code. I stay responsible for it.</h2>
+    <ol class="rules" style="max-width:52rem">
+      <li class="frag"><span class="n">1</span><div><b>Always review</b><span>It makes mistakes and adds things nobody asked for. It's a generator, so it keeps generating.</span></div></li>
+      <li class="frag"><span class="n">2</span><div><b>Know the process</b><span>Testing, security, code review, deployment. AI doesn't replace the process.</span></div></li>
+      <li class="frag"><span class="n">3</span><div><b>No production access</b><span>Never give agents live databases or real credentials.</span></div></li>
+      <li class="frag"><span class="n">4</span><div><b>Make it explain itself</b><span>"Why did you write this? Why not the other way?" If I don't understand it, I don't ship it.</span></div></li>
+      <li class="frag"><span class="n">5</span><div><b>Document the why</b><span>So the next agent, or human, fixing this code knows why it was built this way.</span></div></li>
+    </ol>
+  </div>
+  <aside class="notes"><ul>
+    <li>Rule 5 is new for most people: we now write documentation for AI agents too, not only for humans.</li>
+  </ul></aside>
+</section>
+
+<!-- 17 ─ Roles merge -->
+<section class="slide" id="s17">
+  <div class="wrap">
+    <p class="eyebrow">Part 5 · The landscape has changed</p>
+    <h2>The lines between roles are disappearing</h2>
+    <p class="lead">Frontend, backend, DevOps and AI used to be separate jobs. With AI doing much of the typing, companies want engineers who can own the whole problem.</p>
+    <div class="merge" id="merge">
+      <div class="slot" style="left:50%;top:9%"><span class="role">Talking to the client</span></div>
+      <div class="slot" style="left:84%;top:30%"><span class="role">Backend</span></div>
+      <div class="slot" style="left:84%;top:72%"><span class="role">DevOps &amp; Cloud</span></div>
+      <div class="slot" style="left:50%;top:92%"><span class="role">Security</span></div>
+      <div class="slot" style="left:16%;top:72%"><span class="role">AI &amp; Data</span></div>
+      <div class="slot" style="left:16%;top:30%"><span class="role">Frontend</span></div>
+      <div class="fde-core"><b>FDE</b><small>Forward Deployed Engineer</small></div>
+    </div>
+    <div class="row" style="justify-content:center"><button class="btn primary" id="merge-btn" type="button">Merge the roles</button></div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Click Merge. The job titles still exist, but the strongest engineers now cross these lines.</li>
+    <li>Say "the lines are disappearing", not "these jobs are gone". It's more accurate and avoids debate with faculty.</li>
+  </ul></aside>
+</section>
+
+<!-- 18 ─ FDE -->
+<section class="slide" id="s18">
+  <div class="wrap">
+    <p class="eyebrow">A role you'll hear about more</p>
+    <h2>Forward Deployed Engineer</h2>
+    <p class="lead">An engineer who works directly with the customer, understands their real problem, and builds the whole solution end to end. The role started at Palantir. Today AI companies like OpenAI and Anthropic hire FDEs.</p>
+    <p class="small"><b>Example: my bank project was FDE work.</b></p>
+    <div class="fde-path">
+      <div class="card frag"><span class="k">Understand</span><p class="small">What does the bank actually need?</p></div>
+      <div class="card frag"><span class="k">Research</span><p class="small">Is AI safe and accurate on their data?</p></div>
+      <div class="card frag"><span class="k">Build</span><p class="small">Backend, frontend, AI pipeline.</p></div>
+      <div class="card frag"><span class="k">Deploy</span><p class="small">Scalable cloud, in production.</p></div>
+    </div>
+    <div class="cols-2">
+      <p class="quote frag">Judged by one thing: did the customer's problem get solved?</p>
+      <p class="lead frag"><b class="blue">BIM students:</b> this role suits you. Understanding the business problem is half the job.</p>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Nobody on the bank project said "that's not my department".</li>
+    <li>FDE work needs communication skills: meetings, explaining trade-offs, writing clearly in English.</li>
+  </ul></aside>
+</section>
+
+<!-- 19 ─ Tutor -->
+<section class="slide" id="s19">
+  <div class="wrap">
+    <p class="eyebrow">Part 6 · How to start</p>
+    <h2>Use AI as much as you can, as a tutor</h2>
+    <div class="pairs">
+      <span class="spacer"></span>
+      <div class="col-head"><span class="pill bad">Copy machine</span><span class="small muted">Done tonight, learned nothing</span></div>
+      <div class="col-head"><span class="pill good">Tutor</span><span class="small muted">Better at the next one</span></div>
+
+      <span class="ask frag" data-fg="r1">How?</span>
+      <p class="bubble no frag" data-fg="r1">Write a C program to reverse a string.</p>
+      <p class="bubble yes frag">How do I reverse a string? Give me a hint, not the full code.</p>
+
+      <span class="ask alt frag" data-fg="r2">Why?</span>
+      <p class="bubble no frag" data-fg="r2">Fix this error.</p>
+      <p class="bubble yes frag">Why did I get this error? Explain it like I'm new to C.</p>
+
+      <span class="ask frag" data-fg="r3">Why not?</span>
+      <p class="bubble no frag" data-fg="r3">Write my factorial program.</p>
+      <p class="bubble yes frag">You used a for loop. Why not a while loop?</p>
+    </div>
+    <p class="lead frag">Same homework on both sides. Keep asking how, why and why not. Interviews don't allow ChatGPT.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Read each row left, then right. The task is the same; only the question changes.</li>
+    <li>"Give me a hint, not the full code" is a habit worth building from 1st year.</li>
+    <li>Encourage them: use AI every day. The point is to stay curious while using it.</li>
+  </ul></aside>
+</section>
+
+<!-- 20 ─ Foundation pyramid -->
+<section class="slide" id="s20">
+  <div class="wrap">
+    <p class="eyebrow">The foundation</p>
+    <h2>Build from the bottom up</h2>
+    <div class="pyramid">
+      <div class="layer l1 frag on" style="--w:100%"><b>Math</b><span>linear algebra · probability &amp; statistics · calculus</span></div>
+      <div class="layer l2 frag" style="--w:90%"><b>C → C++</b><span>memory, pointers, OOP. Then any language is easy.</span></div>
+      <div class="layer l3 frag" style="--w:80%"><b>DSA + DBMS</b><span>judge if code is efficient · every app stores data</span></div>
+      <div class="layer l4 frag" style="--w:70%"><b>Git · Linux · Cloud</b><span>how real software is shared, run and deployed</span></div>
+      <div class="layer l5 frag" style="--w:58%"><b>Python · JavaScript</b><span>build and ship</span></div>
+      <div class="layer l6 frag" style="--w:46%"><b>AI apps &amp; agents</b></div>
+    </div>
+    <p class="quote frag">AI builds fast. Foundations keep it standing.</p>
+    <p class="lead frag">A house without a foundation doesn't survive the first earthquake. Neither does your code.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Press → to build the pyramid layer by layer.</li>
+    <li>C and C++ are already in your syllabus. Take them seriously; they make Python and JS easy later.</li>
+    <li>Linux: "Every server I deploy to runs Linux."</li>
+  </ul></aside>
+</section>
+
+<!-- 21 ─ Math -->
+<section class="slide" id="s21">
+  <div class="wrap">
+    <p class="eyebrow">If you want to do serious AI work</p>
+    <h2>Your math classes are inside ChatGPT</h2>
+    <div class="cols-3 math">
+      <div class="card">
+        <h3>Linear algebra</h3>
+        <svg viewBox="0 0 240 160" role="img" aria-label="Words with similar meanings sit close together as vectors">
+          <line class="ax" x1="10" y1="150" x2="230" y2="150"></line><line class="ax" x1="10" y1="10" x2="10" y2="150"></line>
+          <ellipse class="cluster" cx="55" cy="45" rx="42" ry="30"></ellipse>
+          <ellipse class="cluster" cx="185" cy="52" rx="42" ry="30"></ellipse>
+          <ellipse class="cluster" cx="118" cy="122" rx="48" ry="20"></ellipse>
+          <circle class="pt food" cx="40" cy="40" r="4.5"></circle><text class="pt-label" x="33" y="44" text-anchor="end">momo</text>
+          <circle class="pt food" cx="62" cy="28" r="4.5"></circle><text class="pt-label" x="44" y="20">dumpling</text>
+          <circle class="pt food" cx="55" cy="60" r="4.5"></circle><text class="pt-label" x="62" y="64">pizza</text>
+          <circle class="pt" cx="180" cy="38" r="4.5"></circle><text class="pt-label" x="187" y="35">python</text>
+          <circle class="pt" cx="198" cy="62" r="4.5"></circle><text class="pt-label" x="163" y="78">javascript</text>
+          <circle class="pt" cx="164" cy="58" r="4.5"></circle><text class="pt-label" x="152" y="52">c</text>
+          <circle class="pt place" cx="98" cy="122" r="4.5"></circle><text class="pt-label" x="74" y="112">kathmandu</text>
+          <circle class="pt place" cx="138" cy="124" r="4.5"></circle><text class="pt-label" x="128" y="140">pokhara</text>
+        </svg>
+        <p class="small">Words become <b>vectors</b> (embeddings). Similar meaning = nearby points. TEM uses this.</p>
+      </div>
+      <div class="card">
+        <h3>Probability &amp; statistics</h3>
+        <div class="mini-bars" style="font-size:.9rem;gap:.45rem;padding-block:.6rem">
+          <div><span>Kathmandu</span><i style="width:91%"></i></div>
+          <div><span>a</span><i style="width:6%"></i></div>
+          <div><span>located</span><i style="width:4%"></i></div>
+          <div><span>also</span><i style="width:3%"></i></div>
+        </div>
+        <p class="small">Next-word prediction <b>is</b> probability, learned from the statistics of huge amounts of text. Temperature reshapes the distribution, as you saw in Game 2.</p>
+      </div>
+      <div class="card">
+        <h3>Calculus</h3>
+        <svg viewBox="0 0 240 178" role="img" aria-label="Gradient descent on a curve with two valleys: a shallow local minimum on the right and a deeper global minimum on the left">
+          <path class="curve" id="gd-curve" d=""></path>
+          <circle class="min-dot" id="gd-gmin" r="3"></circle>
+          <circle class="min-dot" id="gd-lmin" r="3"></circle>
+          <text class="min-label global" id="gd-gmin-t">global minimum</text>
+          <text class="min-label local" id="gd-lmin-t">local minimum</text>
+          <g class="ballg" id="gd-ball"><circle class="ball" r="7"></circle></g>
+          <text class="loss" x="8" y="16" id="gd-loss">error = 0.00</text>
+        </svg>
+        <p class="small" id="gd-status" aria-live="polite">&nbsp;</p>
+        <p class="small">Models learn by <b>gradient descent</b>: step downhill along the slope. It can get stuck in a <b>local minimum</b>.</p>
+        <div class="row">
+          <button class="btn sm" id="gd-left" type="button">Start left</button>
+          <button class="btn sm" id="gd-right" type="button">Start right</button>
+          <button class="btn sm" id="gd-rand" type="button">Random start</button>
+        </div>
+      </div>
+    </div>
+    <p class="lead">You already have these in your syllabus. They are what's inside ChatGPT.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>You don't need math to <em>use</em> AI. You need it to <em>build</em> AI or go into research.</li>
+    <li>The ball is gradient descent: each step moves opposite to the slope. On entering the slide it starts on the right and gets stuck in the local minimum.</li>
+    <li>Analogy: walking down a hill in thick fog. You only see your feet. You reach a small valley and think you're at the bottom.</li>
+    <li>Click "Start left": it reaches the global minimum. Same method, different starting point, very different result.</li>
+    <li>Real training uses tricks to avoid getting stuck: momentum, random starting weights, and noise from mini-batches.</li>
+    <li><b>How to read the curve:</b> left to right = different settings of the model's weights (here 1 weight, in ChatGPT billions). Height = error, how wrong the model is. Training = finding the lowest point.</li>
+    <li><b>Global minimum</b> = the best possible settings, lowest error anywhere. <b>Local minimum</b> = settings where every small change makes things worse, so the model stops, but a much better setting exists somewhere else.</li>
+    <li><b>Example, spam filter:</b> stuck in a local minimum, it learns "emails with the word FREE are spam". It catches some spam and stops improving, because small tweaks don't help. At a better minimum it learns many signals together: strange links, unknown sender, urgent tone.</li>
+    <li><b>Example, Pathao or Google Maps:</b> at every junction you take the road that looks shortest right now, and end up stuck in Kalanki traffic. Every local choice looked good, but the best route overall was a different road. Choosing the best-looking small step every time can trap you.</li>
+    <li><b>Example, career (ties back to your story):</b> a comfortable path where every small change looks worse is a local minimum. Sometimes you need a big jump to reach a better valley, like I did moving from ECE to computer science.</li>
+    <li><b>How the fixes map:</b> momentum = a ball rolling with speed carries over small bumps. Random starts = try from many places and keep the best. Learning rate = step size: too big and it jumps around, too small and it takes forever.</li>
+    <li><b>Honest note if someone asks:</b> in very large networks, most local minima turn out almost as good as the global one. The bigger practical problems are flat areas where the slope is nearly zero and learning slows down. Nobody finds the true global minimum for ChatGPT. The goal is an error low enough to work well.</li>
+  </ul></aside>
+</section>
+
+<!-- 21b ─ Backpropagation -->
+<section class="slide" id="s21b">
+  <div class="wrap">
+    <p class="eyebrow">Calculus in action · the base of deep learning</p>
+    <h2>Backpropagation: how a neural network learns</h2>
+    <p class="lead">Guess, measure the error, use derivatives to see which way each weight should move, then adjust. Repeat millions of times.</p>
+    <div class="bp">
+      <div>
+        <svg viewBox="0 0 480 180" id="bp-svg" data-phase="ready" role="img" aria-label="A one-weight network: x times w gives a prediction, compared with the real price to get the error. Gradients flow backwards from the error to the weight.">
+          <defs>
+            <marker id="bpf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="bp-mk-f" d="M0 0 L10 5 L0 10 z"></path></marker>
+            <marker id="bpb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="bp-mk-b" d="M0 0 L10 5 L0 10 z"></path></marker>
+            <marker id="bpt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="arrowhead" d="M0 0 L10 5 L0 10 z"></path></marker>
+          </defs>
+          <line class="bp-fwd" x1="94" y1="95" x2="200" y2="95" marker-end="url(#bpf)"></line>
+          <line class="bp-fwd" x1="272" y1="95" x2="378" y2="95" marker-end="url(#bpf)"></line>
+          <text class="bp-val" x="148" y="84" id="bp-w">w = 100</text>
+          <text class="bp-small" x="326" y="84">compare</text>
+          <g class="bp-node"><circle cx="60" cy="95" r="32"></circle><text class="bp-big" x="60" y="95">x = 2</text><text class="bp-small" x="60" y="110">plates</text></g>
+          <g class="bp-node"><circle cx="238" cy="95" r="32"></circle><text class="bp-big" x="238" y="93">ŷ</text><text class="bp-val" x="238" y="110" id="bp-yhat">?</text></g>
+          <g class="bp-node"><circle cx="416" cy="95" r="34"></circle><text class="bp-big" x="416" y="93">L</text><text class="bp-val" x="416" y="110" id="bp-loss">?</text></g>
+          <text class="bp-val" x="416" y="22">y = 300</text>
+          <text class="bp-small" x="416" y="36">real price (Rs.)</text>
+          <line class="bp-target" x1="416" y1="42" x2="416" y2="56" marker-end="url(#bpt)"></line>
+          <path class="bp-back" d="M396 124 Q 327 162 262 124" marker-end="url(#bpb)"></path>
+          <path class="bp-back" d="M214 124 Q 178 156 152 104" marker-end="url(#bpb)"></path>
+          <text class="bp-grad" x="330" y="172" id="bp-g1">dL/dŷ = ?</text>
+          <text class="bp-grad" x="150" y="172" id="bp-g2">dL/dw = ?</text>
+        </svg>
+        <div class="row">
+          <span class="pill blue bp-phase" id="bp-phase">Ready</span>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="bp-next" type="button">Forward pass</button>
+          <button class="btn" id="bp-train" type="button">Train 10 rounds</button>
+          <button class="btn" id="bp-reset" type="button">Reset</button>
+        </div>
+        <div class="bp-table">
+          <table>
+            <thead><tr><th>Round</th><th>w</th><th>Prediction ŷ</th><th>Error L</th></tr></thead>
+            <tbody id="bp-rows"><tr><td colspan="4" style="text-align:left;color:var(--muted)">No rounds yet</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="small"><b>Task:</b> learn the price of one plate of momo. 2 plates cost Rs. 300. The model starts with a bad guess, w = 100.</p>
+        <pre class="code" id="bp-code"></pre>
+        <p class="small">A <b>negative</b> derivative means "increase w to reduce the error". After a few rounds w reaches about <b>150</b>, the real price per plate. Nobody told it 150. It learned from data.</p>
+        <div class="deep-strip" aria-label="In a deep network, values flow forward through layers and gradients flow backward through every layer">
+          <div class="lane"><span class="f">forward →</span><span class="lay">input</span><span class="f">→</span><span class="lay">layer 1</span><span class="f">→</span><span class="lay">layer 2</span><span class="f">→</span><span class="lay">… layer 96</span><span class="f">→</span><span class="lay">error</span></div>
+          <div class="lane"><span class="b">← backward: chain rule through every layer, for billions of weights</span></div>
+        </div>
+        <p class="caption">PyTorch and TensorFlow calculate these derivatives automatically (autograd). Knowing what they do is what lets you debug training.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Click Forward pass: the model predicts 2 × 100 = 200. Real answer 300. Error = 10,000.</li>
+    <li>Click Backward pass: this is the chain rule from your calculus class. dL/dw = dL/dŷ × dŷ/dw. The red arrows show the error flowing back to the weight.</li>
+    <li>Click Update weight: w moves opposite to the derivative, 100 → 120. Learning rate 0.05 controls the step size.</li>
+    <li>Then click Train 10 rounds and watch the error column drop to nearly zero while w approaches 150.</li>
+    <li>Big picture: ChatGPT trains the same way, with the same chain rule applied backwards through many layers and billions of weights. This is why calculus matters for deep learning.</li>
+    <li><b>Why square the error? 1. Signs don't cancel.</b> Predicting 200 for a Rs. 300 order is off by −100. Predicting 400 is off by +100. Both are equally wrong. Without squaring, averaging −100 and +100 gives 0, which looks perfect. Squared, both are 10,000.</li>
+    <li><b>2. Big mistakes cost much more.</b> Off by 10 → error 100. Off by 100 → error 10,000. The model works hardest on fixing its worst mistakes.</li>
+    <li><b>3. Easy, smooth derivative.</b> The derivative of (ŷ − y)² is 2(ŷ − y): the slope is proportional to how wrong you are. Far from the answer, big steps. Close to it, small careful steps, automatically. That's why w moved 100 → 120 → 132 → … and slowed down near 150.</li>
+    <li><b>Why not just |ŷ − y| (absolute error)?</b> It has a sharp corner at zero, where the derivative jumps from −1 to +1. The slope stays the same size however close you are, so it tends to overshoot. Squared error is a smooth bowl.</li>
+    <li><b>Statistics link:</b> minimising squared error finds the average (mean). It's the same idea as least squares in your statistics course.</li>
+    <li><b>If someone asks "Does ChatGPT use squared error?"</b> No. Squared error is for predicting numbers: prices, temperatures, marks. For choosing the next word, models use cross-entropy loss, which punishes giving a low probability to the correct word. The backprop and chain rule part is exactly the same.</li>
+    <li><b>Downside to mention if asked:</b> because big errors are squared, one crazy data point (an outlier, like a typo of Rs. 30,000 instead of 300) can pull the whole model towards it.</li>
+  </ul></aside>
+</section>
+
+<!-- 21c ─ Deep network visual -->
+<section class="slide" id="s21c">
+  <div class="wrap">
+    <p class="eyebrow">What a deep neural network looks like</p>
+    <h2>Layers of neurons, connected by weights</h2>
+    <div class="nn-wrap"><canvas id="nn" role="img" aria-label="A deep neural network: five input words on the left, five hidden layers of neurons in the middle, four possible next words on the right. Signals flow forward to predict Kathmandu, then a learning signal flows backward through every connection."></canvas></div>
+    <div class="row" style="justify-content:space-between">
+      <span class="pill blue" id="nn-phase">Forward: words go in, a prediction comes out</span>
+      <button class="btn" id="nn-pause" type="button">Pause</button>
+    </div>
+    <p class="lead">Every line is a weight the model learns. This drawing has about 600. Models like ChatGPT have billions, across many more layers.</p>
+  </div>
+  <aside class="notes"><ul>
+    <li>No math here. Let them watch one full cycle first.</li>
+    <li>Blue wave: forward pass. The words go in on the left, each layer passes signals to the next, and "Kathmandu" lights up on the right.</li>
+    <li>Red wave: backward pass. The error flows back through every layer and every line (weight) changes a little. That's the chain rule from the last slide, everywhere at once.</li>
+    <li>"Training ChatGPT is this cycle repeated over trillions of words, on thousands of GPUs, for months."</li>
+  </ul></aside>
+</section>
+
+<!-- 22 ─ Years -->
+<section class="slide" id="s22">
+  <div class="wrap">
+    <p class="eyebrow">Your roadmap</p>
+    <h2>What to do, year by year</h2>
+    <div class="cols-3">
+      <div class="card year">
+        <h3><span class="y">1st</span> Build the base</h3>
+        <ul>
+          <li>C, then C++. Really understand them.</li>
+          <li>Git and GitHub from day one</li>
+          <li>Basic Linux commands</li>
+          <li>Ask AI "why", not "write"</li>
+        </ul>
+      </div>
+      <div class="card year">
+        <h3><span class="y">2nd</span> Start building</h3>
+        <ul>
+          <li>DSA and DBMS, seriously</li>
+          <li>2–3 real projects: college notice app, hostel management, a shop's inventory</li>
+          <li>Deploy them. A live link, not a zip file.</li>
+        </ul>
+      </div>
+      <div class="card year">
+        <h3><span class="y">3rd</span> Go deeper</h3>
+        <ul>
+          <li>Pick a direction: web, mobile, backend, data, AI</li>
+          <li>One project using an AI API, like a chatbot over your syllabus PDFs</li>
+          <li>Cloud basics, internships, open source</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bim">
+      <span class="tag">BIM</span>
+      <p>Your edge is business + tech. Business analyst, product roles, AI automation for companies, data analysis, and FDE-style roles all need people who understand both the problem and the tool.</p>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Ask each year group to raise hands, then speak to them directly.</li>
+    <li>"Your GitHub and LinkedIn are your CV now."</li>
+  </ul></aside>
+</section>
+
+<!-- 23 ─ Tools -->
+<section class="slide" id="s23">
+  <div class="wrap">
+    <p class="eyebrow">Practical tools</p>
+    <h2>Learn the tools real teams use</h2>
+    <div class="cols-2">
+<pre class="code"><span class="dim"># Git: save and share your work</span>
+$ git init
+$ git add .
+$ git commit -m "first project"
+$ git push origin main
+
+<span class="dim"># Linux: servers run Linux</span>
+$ ssh user@my-server
+$ ls   cd   cat   grep   chmod
+$ tail -f app.log   <span class="dim"># watch live logs</span></pre>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="card">
+          <h3>Cloud: AWS, Google Cloud, Azure</h3>
+          <p class="small">New accounts get free credits or a free tier. Run a small server and a database, and deploy your project for free for a while.</p>
+        </div>
+        <div class="card">
+          <h3>GitHub Student Developer Pack</h3>
+          <p class="small">Free tools and cloud credits for students. Sign up with your college email or student ID.</p>
+        </div>
+        <p class="small muted">Set a billing alert on day one so a forgotten server doesn't surprise you.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Free tier offers change often. Tell them to check the provider's current page.</li>
+    <li>Billing alert tip: many students get a surprise bill from a server they forgot to stop.</li>
+  </ul></aside>
+</section>
+
+<!-- 23a ─ AWS e-commerce architecture -->
+<section class="slide" id="s23a">
+  <div class="wrap">
+    <p class="eyebrow">What you'll deploy one day</p>
+    <h2>A typical e-commerce app on AWS</h2>
+    <div class="aws-wrap">
+      <svg class="aws" id="aws" viewBox="0 0 960 440" role="img" aria-label="User browser connects through Route 53 and a load balancer to frontend and backend servers in a public subnet inside a VPC. The backend reads a database in a private subnet and stores product images in an S3 bucket, which browsers load directly.">
+        <defs>
+          <marker id="awm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="mk" d="M0 0 L10 5 L0 10 z"></path></marker>
+          <marker id="awa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="mk on" d="M0 0 L10 5 L0 10 z"></path></marker>
+        </defs>
+        <rect class="cloud" x="150" y="14" width="796" height="412" rx="16"></rect>
+        <text class="lbl c" x="166" y="412">AWS CLOUD</text>
+        <rect class="vpc" x="318" y="48" width="470" height="360" rx="12"></rect>
+        <text class="lbl v" x="332" y="68">VPC · YOUR PRIVATE NETWORK</text>
+        <rect class="pub" x="468" y="80" width="300" height="140" rx="10"></rect>
+        <text class="lbl p" x="480" y="98">PUBLIC SUBNET</text>
+        <rect class="priv" x="468" y="248" width="300" height="140" rx="10"></rect>
+        <text class="lbl r" x="480" y="266">PRIVATE SUBNET · NO INTERNET</text>
+
+        <path class="edge n" data-s="1" d="M128 222 H170"></path>
+        <path class="edge n" data-s="2" d="M290 222 H334"></path>
+        <path class="edge n" data-s="3" d="M444 222 H462 V156 H482"></path>
+        <path class="edge n" data-s="4" d="M608 156 H626"></path>
+        <path class="edge n" data-s="5" d="M690 194 V286"></path>
+        <path class="edge n" data-s="6" d="M752 156 H808"></path>
+        <path class="edge dash n" data-s="6" d="M72 186 V30 H870 V116"></path>
+        <text class="s n" data-s="6" x="470" y="25">product images load directly from S3</text>
+
+        <g class="n" data-s="1"><rect class="box" x="16" y="186" width="112" height="72" rx="10"></rect><text class="t" x="72" y="218">User</text><text class="s" x="72" y="236">web browser</text></g>
+        <g class="n" data-s="2"><rect class="box" x="172" y="190" width="118" height="64" rx="10"></rect><text class="t" x="231" y="218">Route 53</text><text class="s" x="231" y="236">DNS</text></g>
+        <g class="n" data-s="3"><rect class="box" x="336" y="190" width="108" height="64" rx="10"></rect><text class="t" x="390" y="218">Load</text><text class="t" x="390" y="236">balancer</text></g>
+        <g class="n" data-s="4"><rect class="box" x="484" y="118" width="124" height="76" rx="10"></rect><text class="t" x="546" y="152">Frontend</text><text class="s" x="546" y="170">web pages · EC2</text></g>
+        <g class="n" data-s="4"><rect class="box" x="628" y="118" width="124" height="76" rx="10"></rect><text class="t" x="690" y="152">Backend</text><text class="s" x="690" y="170">API · EC2</text></g>
+        <g class="n" data-s="5"><rect class="box" x="540" y="288" width="180" height="76" rx="10"></rect><text class="t" x="630" y="322">Database</text><text class="s" x="630" y="340">RDS · products, orders</text></g>
+        <g class="n" data-s="6"><rect class="box" x="810" y="118" width="120" height="76" rx="10"></rect><text class="t" x="870" y="152">S3 bucket</text><text class="s" x="870" y="170">images, files</text></g>
+      </svg>
+    </div>
+    <div class="aws-ctl">
+      <div>
+        <h3 id="aws-title"></h3>
+        <p class="small" id="aws-body"></p>
+      </div>
+      <div class="row">
+        <button class="btn" id="aws-prev" type="button">Back</button>
+        <button class="btn primary" id="aws-next" type="button">Follow a request</button>
+        <button class="btn" id="aws-all" type="button">Show all</button>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><ul>
+    <li>Click "Follow a request" and walk through the 6 steps: browser, DNS, load balancer, servers, database, images.</li>
+    <li>Analogy: Route 53 is the phone book, the load balancer is the receptionist sending you to a free counter, the servers are the staff, the database is the locked record room, S3 is the warehouse for photos.</li>
+    <li>Security point: the database sits in a private subnet with no internet access. Only the backend can talk to it. That's the same "least access" idea as the agent safety slide.</li>
+    <li>Scaling point: during a Dashain sale, add more servers behind the load balancer. Users never notice.</li>
+    <li>If someone asks: in production many teams also put the frontend and backend servers in private subnets and keep only the load balancer public, and put CloudFront (a CDN) in front of S3 for faster images.</li>
+    <li>Link to FDE: one engineer who understands this whole picture, not just one box, is very valuable.</li>
+  </ul></aside>
+</section>
+
+<!-- 24 ─ Takeaways -->
+<section class="slide" id="s24">
+  <div class="wrap">
+    <p class="eyebrow">If you remember only four things</p>
+    <ol class="takeaways">
+      <li><span class="n">1</span><p>AI writes the code. <span class="accent">You stay responsible for it.</span></p></li>
+      <li class="frag"><span class="n">2</span><p>Fundamentals (C, DSA, DBMS, math) let you judge what AI gives you.</p></li>
+      <li class="frag"><span class="n">3</span><p>Use AI as a tutor. Ask how, why and why not.</p></li>
+      <li class="frag"><span class="n">4</span><p>Build, deploy and show your work on GitHub.</p></li>
+    </ol>
+  </div>
+  <aside class="notes"><ul>
+    <li>Read each one slowly. Don't add new content here.</li>
+  </ul></aside>
+</section>
+
+<!-- 25 ─ Close -->
+<section class="slide" id="s25">
+  <div class="wrap">
+    <h1 class="display">Questions<span>?</span></h1>
+    <p class="speaker">Thank you · <strong>Shishir Subedi</strong></p>
+  </div>
+  <aside class="notes"><ul>
+    <li>Questions to expect: Will AI take developer jobs? Python or JS first? How did you get your internship? Can I get a job without a CS degree? (Your ECE story answers that.)</li>
+    <li>On jobs: "AI is taking over typing code, not responsibility for code. Entry-level work is changing, so learn fundamentals and AI tools together."</li>
+  </ul></aside>
+</section>
+
+</main>
+
+<div class="notes-panel" id="notes" hidden>
+  <h4>Speaker notes</h4>
+  <div id="notes-body"></div>
+</div>
+
+<nav class="bar" aria-label="Slide controls">
+  <span class="talk-name">From ECE to <b>GenAI</b></span>
+  <div class="group">
+    <button class="icon-btn" id="prev" type="button" aria-label="Previous slide">←</button>
+    <span class="counter" id="counter" aria-live="polite">1 / 25</span>
+    <button class="icon-btn" id="next" type="button" aria-label="Next slide">→</button>
+  </div>
+  <div class="group">
+    <button class="icon-btn" id="notes-btn" type="button" aria-pressed="false">Notes<kbd>N</kbd></button>
+    <button class="icon-btn" id="theme-btn" type="button">Theme<kbd>T</kbd></button>
+    <button class="icon-btn" id="fs-btn" type="button">Full screen<kbd>F</kbd></button>
+  </div>
+</nav>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ================= Deck navigation ================= */
+  const slides = $$('.slide');
+  const hooks = {};
+  let cur = -1;
+
+  const fragsOf = s => $$('.frag', s);
+  const initiallyOn = new Set($$('.frag.on'));
+
+  function go(i, fromBack) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    if (i === cur) return;
+    if (cur >= 0) {
+      const old = slides[cur];
+      old.classList.remove('active');
+      old.setAttribute('aria-hidden', 'true');
+      hooks[old.id]?.leave?.();
+    }
+    const s = slides[i];
+    fragsOf(s).forEach(f => f.classList.toggle('on', !!fromBack || initiallyOn.has(f)));
+    s.classList.add('active');
+    s.removeAttribute('aria-hidden');
+    s.scrollTop = 0;
+    cur = i;
+    $('#counter').textContent = `${i + 1} / ${slides.length}`;
+    $('#progress').style.width = `${((i + 1) / slides.length) * 100}%`;
+    const notes = $('.notes', s);
+    $('#notes-body').innerHTML = notes ? notes.innerHTML : '<p>No notes for this slide.</p>';
+    try { history.replaceState(null, '', '#' + s.id); } catch (e) {}
+    hooks[s.id]?.enter?.();
+  }
+
+  function next() {
+    const fr = fragsOf(slides[cur]);
+    const f = fr.find(x => !x.classList.contains('on'));
+    if (f) { (f.dataset.fg ? fr.filter(x => x.dataset.fg === f.dataset.fg) : [f]).forEach(x => x.classList.add('on')); return; }
+    go(cur + 1);
+  }
+  function prev() {
+    const on = fragsOf(slides[cur]).filter(x => x.classList.contains('on') && !initiallyOn.has(x));
+    if (on.length) {
+      const last = on[on.length - 1];
+      (last.dataset.fg ? on.filter(x => x.dataset.fg === last.dataset.fg) : [last]).forEach(x => x.classList.remove('on'));
+      return;
+    }
+    go(cur - 1, true);
+  }
+
+  slides.forEach(s => s.setAttribute('aria-hidden', 'true'));
+  const startId = (location.hash || '').slice(1);
+  const startIdx = Math.max(0, slides.findIndex(s => s.id === startId));
+
+  $('#next').addEventListener('click', next);
+  $('#prev').addEventListener('click', prev);
+
+  function toggleNotes() {
+    const p = $('#notes');
+    p.hidden = !p.hidden;
+    $('#notes-btn').setAttribute('aria-pressed', String(!p.hidden));
+  }
+  $('#notes-btn').addEventListener('click', toggleNotes);
+
+  function currentTheme() {
+    const t = document.documentElement.getAttribute('data-theme');
+    if (t) return t;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function toggleTheme() {
+    const t = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('ece-genai-theme', t); } catch (e) {}
+  }
+  try { const saved = localStorage.getItem('ece-genai-theme'); if (saved) document.documentElement.setAttribute('data-theme', saved); } catch (e) {}
+  $('#theme-btn').addEventListener('click', toggleTheme);
+
+  function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) document.exitFullscreen?.();
+      else document.documentElement.requestFullscreen?.()?.catch?.(() => {});
+    } catch (e) {}
+  }
+  $('#fs-btn').addEventListener('click', toggleFullscreen);
+
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = e.target.tagName;
+    const inField = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    if (inField && e.key.startsWith('Arrow')) return;
+    if ((tag === 'BUTTON' || tag === 'SUMMARY' || inField) && (e.key === ' ' || e.key === 'Enter')) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'PageDown': case ' ': case 'ArrowDown': next(); e.preventDefault(); break;
+      case 'ArrowLeft': case 'PageUp': case 'ArrowUp': prev(); e.preventDefault(); break;
+      case 'Home': go(0); e.preventDefault(); break;
+      case 'End': go(slides.length - 1); e.preventDefault(); break;
+      case 'n': case 'N': toggleNotes(); break;
+      case 't': case 'T': toggleTheme(); break;
+      case 'f': case 'F': toggleFullscreen(); break;
+    }
+  });
+
+  let touchX = null, touchY = null;
+  $('#deck').addEventListener('touchstart', e => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
+  $('#deck').addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX, dy = e.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) (dx < 0 ? next : prev)();
+    touchX = touchY = null;
+  }, { passive: true });
+
+  /* ================= Slide 1: replay token stream ================= */
+  hooks.s1 = {
+    enter() {
+      if (reduceMotion) return;
+      const t = $('#hero-tokens');
+      t.classList.remove('replay'); void t.offsetWidth; t.classList.add('replay');
+    }
+  };
+
+  /* ================= Shared bar renderer ================= */
+  function renderBars(el, rows, opts = {}) {
+    el.innerHTML = rows.map(r => `
+      <div class="bar-row ${r.cls || ''}">
+        <span class="bar-word">${r.word}</span>
+        <span class="bar-track"><span class="bar-fill"></span></span>
+        <span class="bar-num">${opts.hideNums ? '?' : r.label}</span>
+      </div>`).join('');
+    const fills = $$('.bar-fill', el);
+    const apply = () => fills.forEach((f, i) => { f.style.width = opts.hideNums ? '0%' : Math.max(0, Math.min(100, rows[i].pct)) + '%'; });
+    if (opts.instant) apply(); else requestAnimationFrame(() => requestAnimationFrame(apply));
+  }
+  const pctLabel = p => (p >= 10 ? Math.round(p) : p >= 1 ? p.toFixed(1) : p.toFixed(1)) + '%';
+
+  /* ================= Game 1: guess the next word ================= */
+  const G1 = [
+    { prompt: 'The capital of Nepal is', c: [['Kathmandu', 91], ['a', 3], ['located', 2], ['also', 1.5], ['Pokhara', 0.5]],
+      note: '<strong>Very confident.</strong> One answer dominates because the model saw this fact thousands of times.' },
+    { prompt: 'Dal bhat power, 24', c: [['hour', 87], ['hours', 7], ['ghanta', 2], ['x', 1], ['seven', 0.5]],
+      note: '<strong>It learned our sayings too.</strong> Nobody taught it this rule. It saw the phrase in text that people wrote.' },
+    { prompt: 'Mount Everest is the', c: [['highest', 62], ['tallest', 21], ["world's", 9], ['most', 3], ['best', 1]],
+      note: '<strong>Two good answers.</strong> "highest" and "tallest" both work. The model spreads probability across them.' },
+    { prompt: 'I will submit my assignment', c: [['tomorrow', 38], ['today', 19], ['before', 14], ['on', 11], ['late', 7]],
+      note: '<strong>Even the model knows students say "tomorrow".</strong> It predicts what people usually write, not what is true.' },
+    { prompt: "My code works, but I don't know", c: [['why', 83], ['how', 11], ['what', 3], ['if', 2], ['where', 0.5]],
+      note: '<strong>Programmer humour is in the training data too.</strong>' },
+    { prompt: 'Ram went to the market to buy', c: [['some', 19], ['vegetables', 16], ['a', 14], ['milk', 9], ['momo', 6]],
+      note: '<strong>Flat bars mean the model is unsure.</strong> Many answers are possible. This is where creativity comes from, and also mistakes (hallucinations).' }
+  ];
+  let g1i = 0, g1shown = false;
+  function g1rows(r, hide) {
+    const rows = r.c.map(([w, p], i) => ({ word: w, pct: p, label: pctLabel(p), cls: i === 0 && !hide ? 'top' : '' }));
+    const others = Math.max(0, 100 - r.c.reduce((s, x) => s + x[1], 0));
+    rows.push({ word: 'all other words', pct: others, label: pctLabel(others), cls: 'other' });
+    return rows;
+  }
+  function g1render() {
+    const r = G1[g1i]; g1shown = false;
+    $('#g1-round').textContent = `Round ${g1i + 1} of ${G1.length}`;
+    $('#g1-prompt').textContent = r.prompt;
+    const b = $('#g1-blank'); b.textContent = '?'; b.classList.remove('filled');
+    renderBars($('#g1-bars'), g1rows(r, true).map(x => ({ ...x, word: '········' })), { hideNums: true, instant: true });
+    $('#g1-note').hidden = true;
+    $('#g1-reveal').disabled = false;
+    $('#g1-next').textContent = g1i === G1.length - 1 ? 'Play again' : 'Next round';
+  }
+  function g1reveal() {
+    if (g1shown) return; g1shown = true;
+    const r = G1[g1i];
+    renderBars($('#g1-bars'), g1rows(r, false));
+    const b = $('#g1-blank'); b.textContent = r.c[0][0]; b.classList.add('filled');
+    $('#g1-note').innerHTML = r.note; $('#g1-note').hidden = false;
+    $('#g1-reveal').disabled = true;
+  }
+  $('#g1-reveal').addEventListener('click', g1reveal);
+  $('#g1-next').addEventListener('click', () => { g1i = (g1i + 1) % G1.length; g1render(); });
+  g1render();
+
+  /* ================= Game 2: temperature playground ================= */
+  const TP = [
+    { label: "let's go eat …", prompt: "After class, let's go eat",
+      c: [['momo', 42], ['chowmein', 18], ['dal bhat', 14], ['pizza', 9], ['samosa', 6], ['sel roti', 4], ['laphing', 3], ['gundruk', 2]] },
+    { label: 'favourite language …', prompt: 'My favourite programming language is',
+      c: [['Python', 45], ['JavaScript', 22], ['C', 11], ['Java', 9], ['C++', 6], ['Rust', 4], ['Go', 2], ['Assembly', 1]] },
+    { label: 'capital of Nepal …', prompt: 'The capital of Nepal is',
+      c: [['Kathmandu', 91], ['a', 3.5], ['located', 2.5], ['also', 1.5], ['Pokhara', 1, true], ['Lalitpur', 0.5, true]] }
+  ];
+  let tpi = 0, tpTally = [], tpTimer = null;
+  const tpT = () => parseFloat($('#tp-temp').value);
+  function tpBase() {
+    const c = TP[tpi].c, z = c.reduce((s, x) => s + x[1], 0);
+    return c.map(x => x[1] / z);
+  }
+  function tpDist(T) {
+    const base = tpBase();
+    if (T < 0.05) { const m = base.indexOf(Math.max(...base)); return base.map((_, i) => (i === m ? 1 : 0)); }
+    const w = base.map(p => Math.pow(p, 1 / T)), z = w.reduce((s, x) => s + x, 0);
+    return w.map(x => x / z);
+  }
+  const tpHelp = T => T < 0.05 ? '<strong>Temperature 0:</strong> always the top word. Same answer every time.'
+    : T < 0.8 ? '<strong>Low temperature:</strong> the top word gets even more likely. Safe and predictable.'
+    : T <= 1.2 ? '<strong>Around 1:</strong> the model’s normal chances. Usually the top word, sometimes another.'
+    : '<strong>High temperature:</strong> the bars flatten, so rare words get picked more often. More creative, but risky for facts.';
+  function tpSetNote(html, bad) { const n = $('#tp-note'); n.innerHTML = html; n.classList.toggle('bad', !!bad); }
+  function tpBuild() {
+    const r = TP[tpi], base = tpBase();
+    tpTally = r.c.map(() => 0);
+    $('#tp-prompt').textContent = r.prompt;
+    const b = $('#tp-blank'); b.textContent = '?'; b.classList.remove('filled', 'bad');
+    $('#tp-bars').innerHTML = r.c.map(([w, , wrong], i) => `
+      <div class="bar-row t4">
+        <span class="bar-word">${w}${wrong ? '<span class="wrong">wrong</span>' : ''}</span>
+        <span class="bar-track"><span class="bar-fill"></span><span class="bar-tick" style="left:${(base[i] * 100).toFixed(2)}%"></span></span>
+        <span class="bar-num"></span>
+        <span class="bar-tally"></span>
+      </div>`).join('');
+    tpUpdate();
+    tpSetNote(tpHelp(tpT()));
+  }
+  function tpUpdate(pickedIdx) {
+    const d = tpDist(tpT());
+    $$('#tp-bars .bar-row').forEach((row, i) => {
+      $('.bar-fill', row).style.width = (d[i] * 100).toFixed(2) + '%';
+      $('.bar-num', row).textContent = pctLabel(d[i] * 100);
+      $('.bar-tally', row).textContent = tpTally[i] ? '×' + tpTally[i] : '';
+      row.classList.toggle('picked', i === pickedIdx);
+    });
+  }
+  function tpPick() {
+    const d = tpDist(tpT());
+    let r = Math.random(), idx = 0;
+    for (let i = 0; i < d.length; i++) { r -= d[i]; if (r <= 0) { idx = i; break; } idx = i; }
+    tpTally[idx]++;
+    const [word, , wrong] = TP[tpi].c[idx];
+    const b = $('#tp-blank');
+    b.textContent = word; b.classList.toggle('bad', !!wrong);
+    b.classList.remove('filled'); void b.offsetWidth; b.classList.add('filled');
+    tpUpdate(idx);
+    return { word, wrong: !!wrong, idx };
+  }
+  function tpSummary() {
+    const c = TP[tpi].c, total = tpTally.reduce((s, x) => s + x, 0);
+    const wrongCount = tpTally.reduce((s, n, i) => s + (c[i][2] ? n : 0), 0);
+    const distinct = tpTally.filter(Boolean).length;
+    if (wrongCount) return tpSetNote(`<strong>${wrongCount} wrong answer${wrongCount > 1 ? 's' : ''} out of ${total}.</strong> High temperature on a fact question gives confident wrong answers. That’s a hallucination.`, true);
+    tpSetNote(`<strong>${distinct} different word${distinct > 1 ? 's' : ''} in ${total} picks.</strong> ` + (distinct === 1 ? 'Predictable: the same answer every time.' : distinct >= 5 ? 'Lots of variety. Rare words are winning sometimes.' : 'Mostly the top words, with an occasional surprise.'));
+  }
+  function tpBusy(on) { ['#tp-one', '#tp-many', '#tp-clear'].forEach(s => { $(s).disabled = on; }); }
+  function tpStop() { clearInterval(tpTimer); tpTimer = null; tpBusy(false); }
+  $('#tp-one').addEventListener('click', () => {
+    const p = tpPick();
+    if (p.wrong) tpSetNote(`<strong>Wrong! ${p.word} is not the capital.</strong> The model picked a low-chance word and said it confidently. That’s a hallucination.`, true);
+    else tpSetNote(`Picked <strong>${p.word}</strong>. ` + tpHelp(tpT()));
+  });
+  $('#tp-many').addEventListener('click', () => {
+    tpBusy(true);
+    let n = 0;
+    if (reduceMotion) { for (; n < 20; n++) tpPick(); tpStop(); tpSummary(); return; }
+    tpTimer = setInterval(() => { tpPick(); if (++n >= 20) { tpStop(); tpSummary(); } }, 110);
+  });
+  $('#tp-clear').addEventListener('click', () => {
+    tpTally = tpTally.map(() => 0);
+    const b = $('#tp-blank'); b.textContent = '?'; b.classList.remove('filled', 'bad');
+    tpUpdate(); tpSetNote(tpHelp(tpT()));
+  });
+  $('#tp-temp').addEventListener('input', () => {
+    tpStop();
+    $('#tp-temp-out').textContent = tpT().toFixed(1);
+    tpTally = tpTally.map(() => 0);
+    tpUpdate(); tpSetNote(tpHelp(tpT()));
+  });
+  const tpPromptsEl = $('#tp-prompts');
+  tpPromptsEl.innerHTML = TP.map((p, i) => `<button type="button" class="chip" aria-pressed="${i === tpi}">${p.label}</button>`).join('');
+  $$('.chip', tpPromptsEl).forEach((btn, i) => btn.addEventListener('click', () => {
+    tpStop(); tpi = i;
+    $$('.chip', tpPromptsEl).forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+    tpBuild();
+  }));
+  tpBuild();
+  hooks.s6t = { leave: tpStop };
+
+  /* ================= Game 3: tiny trigram language model ================= */
+  const CORPUS = [
+    'students in nepal love to build apps with python .',
+    'students in nepal love to eat momo after class .',
+    'students in kathmandu love to play futsal after class .',
+    'students in kathmandu learn to code with ai .',
+    'i love to eat momo with spicy achar .',
+    'i love to code in python at night .',
+    'i love to play futsal with my friends .',
+    'my friends love to build apps with ai .',
+    'my code works but i do not know why .',
+    'my code does not work and i do not know why .',
+    'my code is slow so i ask ai why .',
+    'ai can write code but you must review it .',
+    'ai can write code faster than me .',
+    'ai can help you learn if you ask why .',
+    'ai can make mistakes so you must check it .',
+    'the model predicts the next word .',
+    'the model learns patterns from a lot of text .',
+    'the model can make mistakes so you must check it .',
+    'you must learn c before python .',
+    'you must review code before you ship it .',
+    'the teacher said the assignment is due tomorrow .',
+    'i will submit the assignment tomorrow .',
+    'i will learn python after class .'
+  ];
+  const tri = new Map();
+  CORPUS.forEach(line => {
+    const w = ['<s>', '<s>', ...line.split(' ')];
+    for (let i = 2; i < w.length; i++) {
+      const k = w[i - 2] + '|' + w[i - 1];
+      if (!tri.has(k)) tri.set(k, new Map());
+      const m = tri.get(k); m.set(w[i], (m.get(w[i]) || 0) + 1);
+    }
+  });
+  $('#g2-count').textContent = CORPUS.length;
+  $('#g2-corpus').innerHTML = CORPUS.map(s => `<li>${s}</li>`).join('');
+
+  const STARTS = ['i love', 'students in', 'my code', 'ai can', 'the model', 'you must'];
+  let g2start = STARTS[0], g2words = [], g2promptLen = 0, g2done = false, g2timer = null;
+
+  function g2dist(a, b, T) {
+    const m = tri.get(a + '|' + b);
+    if (!m) return [];
+    const arr = [...m.entries()].sort((x, y) => y[1] - x[1]);
+    if (T < 0.05) return arr.map(([w], i) => [w, i === 0 ? 1 : 0]);
+    const ws = arr.map(([w, c]) => [w, Math.pow(c, 1 / T)]);
+    const z = ws.reduce((s, x) => s + x[1], 0);
+    return ws.map(([w, v]) => [w, v / z]);
+  }
+  function g2temp() { return parseFloat($('#g2-temp').value); }
+  function g2renderText() {
+    $('#g2-text').innerHTML = g2words.map((w, i) => `<span class="w ${i >= g2promptLen ? 'gen' : ''}">${w}</span>`).join('');
+  }
+  function g2showCandidates(picked, instant) {
+    const n = g2words.length;
+    const a = picked ? g2words[n - 3] : g2words[n - 2];
+    const b = picked ? g2words[n - 2] : g2words[n - 1];
+    $('#g2-ctx').textContent = `"${a} ${b}"`;
+    const d = g2dist(a, b, g2temp());
+    renderBars($('#g2-bars'), d.map(([w, p]) => ({
+      word: w === '.' ? '. (end)' : w, pct: p * 100, label: pctLabel(p * 100), cls: picked && w === picked ? 'picked' : ''
+    })), { instant });
+  }
+  function g2reset() {
+    clearInterval(g2timer); g2timer = null;
+    g2words = g2start.split(' '); g2promptLen = g2words.length; g2done = false;
+    g2renderText(); g2showCandidates(null, true);
+    $('#g2-verdict').hidden = true;
+    $('#g2-step').disabled = false; $('#g2-auto').disabled = false;
+    $('#g2-auto').textContent = 'Write the whole sentence';
+  }
+  function g2step() {
+    if (g2done) return;
+    const n = g2words.length;
+    const d = g2dist(g2words[n - 2], g2words[n - 1], g2temp());
+    if (!d.length) { g2finish(); return; }
+    let r = Math.random(), pick = d[0][0];
+    for (const [w, p] of d) { r -= p; if (r <= 0) { pick = w; break; } }
+    g2words.push(pick);
+    g2renderText(); g2showCandidates(pick);
+    if (pick === '.' || g2words.length > 26) g2finish();
+  }
+  function g2finish() {
+    g2done = true; clearInterval(g2timer); g2timer = null;
+    $('#g2-step').disabled = true; $('#g2-auto').disabled = true;
+    const sentence = g2words.filter(w => w !== '.').join(' ');
+    const seen = CORPUS.some(s => s.includes(sentence));
+    const v = $('#g2-verdict');
+    v.className = 'verdict ' + (seen ? 'seen' : 'new');
+    v.textContent = seen
+      ? 'This sentence is in the training text. The model repeated what it saw.'
+      : 'This sentence is not in the training text. The model made it up from patterns.';
+    v.hidden = false;
+  }
+  function g2auto() {
+    if (g2done || g2timer) return;
+    $('#g2-auto').textContent = 'Writing…';
+    g2step();
+    g2timer = setInterval(() => { g2done ? clearInterval(g2timer) : g2step(); }, reduceMotion ? 150 : 650);
+  }
+  const startsEl = $('#g2-starts');
+  startsEl.innerHTML = STARTS.map(s => `<button type="button" class="chip" aria-pressed="${s === g2start}">${s} …</button>`).join('');
+  $$('.chip', startsEl).forEach((btn, i) => btn.addEventListener('click', () => {
+    g2start = STARTS[i];
+    $$('.chip', startsEl).forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+    g2reset();
+  }));
+  const tempHelp = T => T < 0.05 ? '0 always picks the top word. Same sentence every time.'
+    : T < 0.8 ? 'Low: prefers the most common words. Safe and predictable.'
+    : T <= 1.2 ? 'Around 1: picks words in proportion to how often it saw them.'
+    : 'High: rare words get more chances. More creative, more random.';
+  $('#g2-temp').addEventListener('input', () => {
+    const T = g2temp();
+    $('#g2-temp-out').textContent = T.toFixed(1);
+    $('#g2-temp-help').textContent = tempHelp(T);
+    if (!g2done) g2showCandidates(null, true);
+  });
+  $('#g2-temp-help').textContent = tempHelp(1);
+  $('#g2-step').addEventListener('click', g2step);
+  $('#g2-auto').addEventListener('click', g2auto);
+  $('#g2-reset').addEventListener('click', g2reset);
+  g2reset();
+  hooks.s7 = { leave() { clearInterval(g2timer); g2timer = null; if (!g2done) $('#g2-auto').textContent = 'Write the whole sentence'; } };
+
+  /* ================= Slide 10: agent loop ================= */
+  const AG = [
+    { p: 'think', t: 'I need gaming mice under Rs. 5,000. I will search the store.' },
+    { p: 'act', t: 'search_store("gaming mouse")', code: true },
+    { p: 'observe', t: '48 results. Mouse A: Rs. 7,200 (4.8★) · Mouse B: Rs. 3,100 (4.3★) · Mouse C: Rs. 4,600 (4.7★)' },
+    { p: 'think', t: 'Mouse A is over budget. B and C fit. C has the better rating. Check C.' },
+    { p: 'act', t: 'open_product("Mouse C")', code: true },
+    { p: 'observe', t: 'In stock. Delivery in 3 days. Delivery charge Rs. 150.' },
+    { p: 'think', t: 'Rs. 4,600 + Rs. 150 = Rs. 4,750. Under budget. Paying needs the human’s approval.' },
+    { p: 'act', t: 'ask_user("Buy Mouse C for Rs. 4,750?")', code: true },
+    { p: 'observe', t: 'User: "Yes, go ahead."' },
+    { p: 'think', t: 'Approved. Place the order.' },
+    { p: 'act', t: 'checkout(item="Mouse C", payment="saved card")', code: true },
+    { p: 'observe', t: 'Order #4821 placed. Arrives Saturday.' },
+    { p: 'done', t: 'Task done. Report: "Ordered Mouse C for Rs. 4,750. It arrives Saturday."' }
+  ];
+  let agi = 0, agTimer = null;
+  function agHighlight(phase) {
+    ['think', 'act', 'observe'].forEach(p => $('#ln-' + p).classList.toggle('on', p === phase));
+    $$('#agent-code .ln').forEach(l => l.classList.toggle('hl', l.dataset.l === phase));
+  }
+  function agStep() {
+    if (agi >= AG.length) { agStop(); return; }
+    const s = AG[agi];
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="ph ${s.p}">${s.p}</span><span class="tx ${s.code ? 'mono' : ''}"></span>`;
+    li.querySelector('.tx').textContent = s.t;
+    const log = $('#ag-log'); log.appendChild(li); log.scrollTop = log.scrollHeight;
+    agHighlight(s.p);
+    if (s.p !== 'done') $('#loop-n').textContent = Math.floor(agi / 3) + 1;
+    agi++;
+    if (agi >= AG.length) { $('#ag-step').disabled = true; agStop(); }
+  }
+  function agStop() { clearInterval(agTimer); agTimer = null; $('#ag-play').textContent = 'Play'; }
+  function agReset() {
+    agStop(); agi = 0; $('#ag-log').innerHTML = ''; $('#loop-n').textContent = '0';
+    agHighlight(null); $('#ag-step').disabled = false;
+  }
+  $('#ag-step').addEventListener('click', () => { agStop(); agStep(); });
+  $('#ag-play').addEventListener('click', () => {
+    if (agTimer) { agStop(); return; }
+    if (agi >= AG.length) agReset();
+    $('#ag-play').textContent = 'Pause';
+    agStep();
+    agTimer = setInterval(agStep, reduceMotion ? 400 : 1500);
+  });
+  $('#ag-reset').addEventListener('click', agReset);
+  hooks.s10 = { leave: agStop };
+
+  /* ================= Slides 12r / 12q: RAG pipelines ================= */
+  const CH = [
+    { p: 3, t: 'The library is open from 7 AM to 6 PM, Sunday to Friday.' },
+    { p: 7, t: 'Students must have at least 80% attendance to sit for the board exam.' },
+    { p: 12, t: 'Late assignment submissions lose 10% of marks per day.' },
+    { p: 15, t: 'Lab coats are required in the electronics lab.' }
+  ];
+  const VEC = ['[0.12, −0.48, 0.91, 0.03, …]', '[0.77, 0.10, −0.35, 0.62, …]', '[0.58, 0.22, −0.19, 0.40, …]', '[−0.25, 0.66, 0.08, −0.71, …]'];
+  const QUESTION = 'How much attendance do I need for the exam?';
+  const chunkCard = (c, cls = '') => `<div class="chunk ${cls}"><span class="pg">chunk · page ${c.p}</span>${c.t}</div>`;
+  const RG_INDEX = [
+    { k: 'Input', name: 'PDF document', title: 'Start with your document',
+      body: 'College Handbook.pdf: 40 pages of rules. The LLM has never seen it, so on its own it can only guess.',
+      view: `<div class="pdf-page"><span class="ph">College Handbook.pdf</span><span class="caption">page 7 of 40</span>
+        <span class="ln-bar" style="width:92%"></span><span class="ln-bar" style="width:80%"></span>
+        <span class="hl-line">Students must have at least 80% attendance to sit for the board exam.</span>
+        <span class="ln-bar" style="width:88%"></span><span class="ln-bar" style="width:52%"></span></div>` },
+    { k: 'Split', name: 'Chunks', title: 'Split it into small chunks',
+      body: 'Cut the text into small pieces, about a paragraph each. Every chunk remembers which page it came from.',
+      view: `<div class="chunks">${CH.map(c => chunkCard(c)).join('')}</div><p class="caption">4 of about 120 chunks</p>` },
+    { k: 'Embed', name: 'Embedding model', title: 'Turn each chunk into a vector',
+      body: 'An embedding model converts text into a list of numbers that captures its meaning. Chunks with similar meaning get similar numbers.',
+      view: `<div class="vec-rows">${CH.map((c, i) => `<div class="vec-row"><span>${c.t.slice(0, 38)}…</span><span class="arrow">→</span><span class="vec">${VEC[i]}</span></div>`).join('')}</div><p class="caption">Real vectors have hundreds of numbers (often 768 or more).</p>` },
+    { k: 'Store', name: 'Vector database', title: 'Save everything in a vector database',
+      body: 'Store each vector with its chunk text and page number. This is done once, before anyone asks a question, like the index at the back of a book.',
+      view: `<div class="fake-table"><table><thead><tr><th>id</th><th>vector</th><th>text</th><th>page</th></tr></thead><tbody>
+        ${CH.map((c, i) => `<tr><td>${i + 1}</td><td>${VEC[i].slice(0, 16)}…</td><td>${c.t.slice(0, 26)}…</td><td>${c.p}</td></tr>`).join('')}
+        <tr><td colspan="4" class="more" style="color:var(--muted)">… about 116 more chunks</td></tr></tbody></table></div>` }
+  ];
+  const RG_QUERY = [
+    { k: 'Ask', name: 'Question', title: 'A student asks a question',
+      body: 'Plain language. The student doesn’t know which page has the answer.',
+      view: `<p class="q-bubble">${QUESTION}</p>` },
+    { k: 'Embed', name: 'Embed question', title: 'Turn the question into a vector',
+      body: 'Use the same embedding model as indexing, so the question lands near chunks with similar meaning.',
+      view: `<div class="vec-rows"><div class="vec-row"><span>"${QUESTION}"</span><span class="arrow">→</span><span class="vec">[0.74, 0.13, −0.31, 0.59, …]</span></div></div>` },
+    { k: 'Retrieve', name: 'Search vector DB', title: 'Find the closest chunks',
+      body: 'Compare the question’s vector with every stored vector and keep the top matches. This is the "retrieval" in RAG.',
+      view: `<div class="bars">${[[1, 89], [2, 41], [0, 18], [3, 6]].map(([i, s], r) => `
+        <div class="bar-row ${r < 2 ? 'top' : 'other'}"><span class="bar-word">page ${CH[i].p}</span><span class="bar-track"><span class="bar-fill" style="width:${s}%"></span></span><span class="bar-num">${(s / 100).toFixed(2)}</span></div>`).join('')}</div>
+        <p class="caption">Similarity score. The top 2 chunks (red) go to the next step.</p>` },
+    { k: 'Augment', name: 'Build the prompt', title: 'Add the chunks to the prompt',
+      body: 'Put the retrieved chunks and the question together in one prompt. This is the "augmented" in RAG.',
+      view: `<pre class="code"><span class="dim">Answer using only the context below.
+Mention the page number.</span>
+
+Context:
+[page 7]  Students must have at least 80%
+          attendance to sit for the board exam.
+[page 12] Late assignment submissions lose
+          10% of marks per day.
+
+Question: ${QUESTION}</pre>` },
+    { k: 'Generate', name: 'LLM answers', title: 'The LLM writes the answer',
+      body: 'The answer comes from your document, with the page number, so there is less guessing and fewer hallucinations. This is the "generation" in RAG.',
+      view: `<p class="q-bubble">${QUESTION}</p><div class="a-bubble">You need at least <b>80% attendance</b> to sit for the board exam.<br><span class="cite">Source: College Handbook, page 7</span></div>` }
+  ];
+  function makePipe(prefix, steps) {
+    const nodesEl = $(`#${prefix}-nodes`);
+    nodesEl.innerHTML = steps.map((s, i) => `${i ? '<span class="pa" aria-hidden="true">→</span>' : ''}<button type="button" class="pn"><span class="k">${i + 1} · ${s.k}</span><b>${s.name}</b></button>`).join('');
+    const nodes = $$('.pn', nodesEl);
+    let idx = 0;
+    function show(i) {
+      idx = Math.max(0, Math.min(steps.length - 1, i));
+      nodes.forEach((n, j) => { n.classList.toggle('cur', j === idx); n.classList.toggle('done', j < idx); n.setAttribute('aria-current', j === idx ? 'step' : 'false'); });
+      $(`#${prefix}-title`).textContent = steps[idx].title;
+      $(`#${prefix}-body`).textContent = steps[idx].body;
+      const v = $(`#${prefix}-view`);
+      v.innerHTML = steps[idx].view;
+      v.style.animation = 'none'; void v.offsetWidth; v.style.animation = '';
+      $(`#${prefix}-prev`).disabled = idx === 0;
+      $(`#${prefix}-next`).disabled = idx === steps.length - 1;
+    }
+    nodes.forEach((n, j) => n.addEventListener('click', () => show(j)));
+    $(`#${prefix}-prev`).addEventListener('click', () => show(idx - 1));
+    $(`#${prefix}-next`).addEventListener('click', () => show(idx + 1));
+    show(0);
+  }
+  makePipe('rgi', RG_INDEX);
+  makePipe('rgq', RG_QUERY);
+
+  /* ================= Slide 14: TEM pipeline ================= */
+  const TEM = [
+    { name: 'Question', title: 'The user asks in plain English', body: 'No SQL, no Python. Just a question.',
+      code: '"Which branch had the highest average\n loan amount in 2024?"', rows: '0', note: 'Nothing read yet' },
+    { name: 'Search metadata', title: 'Find the right table from its description', body: 'We indexed table metadata (table names, column names and what they mean), not the raw rows.',
+      code: 'table: loans   (1,200,000 rows)\n  branch      branch name\n  amount      loan amount in USD\n  issue_date  date the loan was issued\n  status      active / closed', rows: '0', note: 'The LLM reads the menu (column descriptions), not the data' },
+    { name: 'LLM writes Python', title: 'The LLM writes code to answer it', body: 'It knows the columns, so it can write the exact query.',
+      code: 'df = load_table("loans")\ndf = df[df.issue_date.dt.year == 2024]\nresult = (df.groupby("branch")["amount"]\n            .mean()\n            .nlargest(3))', rows: '0', note: 'Only code so far' },
+    { name: 'Sandbox runs it', title: 'The code runs in a sandbox', body: 'An isolated environment: no internet, read-only data, a time limit. If the AI writes bad code, it can’t damage anything.',
+      code: 'sandbox: isolated · read-only · 30 s limit\nscanning loans … 1,200,000 rows\ndone in 1.8 s', rows: '0', note: 'Python handles 1,200,000 rows. The LLM reads none of them.' },
+    { name: 'Aggregated result', title: 'Only a small summary comes back', body: 'Exact numbers, computed by code. No guessing.',
+      code: 'branch      avg_amount (USD)\nBranch 12   41,200\nBranch 07   37,850\nBranch 03   36,900', rows: '3', note: 'Down from 1,200,000' },
+    { name: 'LLM reasons', title: 'The LLM reasons over the summary', body: 'With 3 rows instead of 1.2 million, the model can focus and reason well.',
+      code: 'Branch 12 is highest.\n41,200 / 37,850 ≈ 1.09\n→ about 9% above Branch 07', rows: '3', note: 'Less context, better reasoning' },
+    { name: 'Answer', title: 'The user gets a clear, correct answer', body: 'Exact numbers from code, explained in plain language by the LLM.',
+      code: '"Branch 12 had the highest average loan\n amount in 2024 ($41,200), about 9% higher\n than Branch 07."', rows: '3', note: 'Correct and easy to read' }
+  ];
+  let temi = 0;
+  const stagesEl = $('#tem-stages');
+  stagesEl.innerHTML = TEM.map((s, i) => `<button type="button" class="stage-btn"><span class="n">${i + 1}</span>${s.name}</button>`).join('');
+  const stageBtns = $$('.stage-btn', stagesEl);
+  stageBtns.forEach((b, i) => b.addEventListener('click', () => temShow(i)));
+  function temShow(i) {
+    temi = Math.max(0, Math.min(TEM.length - 1, i));
+    const s = TEM[temi];
+    stageBtns.forEach((b, j) => { b.classList.toggle('cur', j === temi); b.classList.toggle('done', j < temi); b.setAttribute('aria-current', j === temi ? 'step' : 'false'); });
+    $('#tem-title').textContent = s.title;
+    $('#tem-body').textContent = s.body;
+    $('#tem-code').textContent = s.code;
+    $('#tem-rows').textContent = s.rows;
+    $('#tem-rows-note').textContent = s.note;
+    $('#tem-prev').disabled = temi === 0;
+    $('#tem-next').disabled = temi === TEM.length - 1;
+  }
+  $('#tem-prev').addEventListener('click', () => temShow(temi - 1));
+  $('#tem-next').addEventListener('click', () => temShow(temi + 1));
+  temShow(0);
+
+  /* ================= Slide 17: merge roles ================= */
+  const merge = $('#merge');
+  let merged = false;
+  function setMerged(on) {
+    merged = on;
+    const roles = $$('.role', merge);
+    roles.forEach(r => { r.style.transform = ''; });
+    if (on) {
+      const box = merge.getBoundingClientRect();
+      const cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+      roles.forEach(r => {
+        const b = r.getBoundingClientRect();
+        r.style.transform = `translate(${cx - (b.left + b.width / 2)}px, ${cy - (b.top + b.height / 2)}px) scale(.3)`;
+      });
+    }
+    merge.classList.toggle('merged', on);
+    $('#merge-btn').textContent = on ? 'Split them again' : 'Merge the roles';
+  }
+  $('#merge-btn').addEventListener('click', () => setMerged(!merged));
+  hooks.s17 = { leave() { if (merged) setMerged(false); } };
+
+  /* ================= Slide 21: gradient descent ================= */
+  const gf = x => 0.25 * x ** 4 - x * x + 0.35 * x;
+  const gdf = x => x ** 3 - 2 * x + 0.35;
+  const newton = x => { for (let i = 0; i < 30; i++) x -= gdf(x) / (3 * x * x - 2); return x; };
+  const GMIN = newton(-1.5), LMIN = newton(1.3), FMIN = gf(GMIN);
+  const gx = x => 120 + x * 45.45, gy = x => 150 - (gf(x) + 1.55) * 34.3;
+  (function drawCurve() {
+    let d = '';
+    for (let x = -2.2; x <= 2.2001; x += 0.05) d += (d ? ' L' : 'M') + gx(x).toFixed(1) + ' ' + gy(x).toFixed(1);
+    $('#gd-curve').setAttribute('d', d);
+    [['gmin', GMIN, 18], ['lmin', LMIN, 18]].forEach(([id, m, dy]) => {
+      $(`#gd-${id}`).setAttribute('cx', gx(m)); $(`#gd-${id}`).setAttribute('cy', gy(m));
+      $(`#gd-${id}-t`).setAttribute('x', gx(m)); $(`#gd-${id}-t`).setAttribute('y', gy(m) + dy);
+    });
+  })();
+  let gdTimer = null;
+  function gdPlace(x) {
+    $('#gd-ball').style.transform = `translate(${gx(x)}px, ${gy(x) - 8}px)`;
+    $('#gd-loss').textContent = `error = ${Math.max(0, gf(x) - FMIN).toFixed(2)}`;
+  }
+  function gdStatus(html, cls) { $('#gd-status').innerHTML = cls ? `<span class="pill ${cls}">${html}</span>` : html; }
+  function gdRun(x0) {
+    clearTimeout(gdTimer);
+    let x = x0, n = 0;
+    const ball = $('#gd-ball');
+    ball.style.transition = 'none'; gdPlace(x); void ball.getBoundingClientRect(); ball.style.transition = '';
+    gdStatus('Rolling downhill…');
+    const finish = () => Math.abs(x - GMIN) < 0.15
+      ? gdStatus('Reached the global minimum', 'good')
+      : gdStatus('Stuck in a local minimum', 'bad');
+    const step = () => {
+      x = Math.max(-2.2, Math.min(2.2, x - 0.08 * gdf(x))); n++; gdPlace(x);
+      if (Math.abs(gdf(x)) > 0.02 && n < 40) gdTimer = setTimeout(step, reduceMotion ? 30 : 420);
+      else finish();
+    };
+    gdTimer = setTimeout(step, reduceMotion ? 30 : 700);
+  }
+  gdPlace(2.05);
+  $('#gd-left').addEventListener('click', () => gdRun(-2.1));
+  $('#gd-right').addEventListener('click', () => gdRun(2.05));
+  $('#gd-rand').addEventListener('click', () => gdRun(Math.random() < 0.5 ? -2.1 + Math.random() * 1.7 : 0.6 + Math.random() * 1.5));
+  hooks.s21 = { enter: () => gdRun(2.05), leave() { clearTimeout(gdTimer); } };
+
+  /* ================= Slide 21b: backpropagation ================= */
+  const BX = 2, BY = 300, LR = 0.05;
+  let bpW, bpPhase, bpYhat, bpLoss, bpG1, bpGrad, bpOldW, bpRound, bpTimer = null;
+  const bf = n => n === null ? '?' : n.toLocaleString('en-US', { maximumFractionDigits: 2 }).replace('-', '−');
+  const NEXT_LABEL = { ready: 'Forward pass', forward: 'Backward pass', backward: 'Update weight', update: 'Forward pass' };
+  const PHASE_LABEL = { ready: 'Ready', forward: 'Step 1 · Forward pass', backward: 'Step 2 · Backward pass (chain rule)', update: 'Step 3 · Update the weight' };
+  const HL = { ready: [], forward: [1, 2], backward: [4, 5, 6], update: [8] };
+  function bpRender() {
+    $('#bp-svg').dataset.phase = bpPhase;
+    $('#bp-w').textContent = 'w = ' + bf(bpW);
+    $('#bp-yhat').textContent = bf(bpYhat);
+    $('#bp-loss').textContent = bf(bpLoss);
+    $('#bp-g1').textContent = 'dL/dŷ = ' + bf(bpG1);
+    $('#bp-g2').textContent = 'dL/dw = ' + bf(bpGrad);
+    $('#bp-phase').textContent = PHASE_LABEL[bpPhase];
+    $('#bp-next').textContent = NEXT_LABEL[bpPhase];
+    const wUsed = bpPhase === 'update' ? bpOldW : bpW;
+    const lines = [
+      '<span class="dim"># 1. forward: make a guess</span>',
+      `ŷ = w × x       = ${bf(wUsed)} × ${BX} = ${bf(bpYhat)}`,
+      `L = (ŷ − y)²    = (${bf(bpYhat)} − ${BY})² = ${bf(bpLoss)}`,
+      '<span class="dim"># 2. backward: derivatives (chain rule)</span>',
+      `dL/dŷ = 2(ŷ − y) = ${bf(bpG1)}`,
+      `dŷ/dw = x        = ${bpG1 === null ? '?' : BX}`,
+      `dL/dw = dL/dŷ × dŷ/dw = ${bf(bpGrad)}`,
+      '<span class="dim"># 3. update: step against the slope</span>',
+      `w = w − ${LR} × dL/dw = ${bpPhase === 'update' ? bf(bpW) : '?'}`
+    ];
+    $('#bp-code').innerHTML = lines.map((l, i) => `<span class="ln ${HL[bpPhase].includes(i) ? 'hl' : ''}">${l}</span>`).join('');
+  }
+  function bpNext() {
+    if (bpPhase === 'ready' || bpPhase === 'update') {
+      bpYhat = bpW * BX; bpLoss = (bpYhat - BY) ** 2; bpG1 = null; bpGrad = null; bpPhase = 'forward';
+    } else if (bpPhase === 'forward') {
+      bpG1 = 2 * (bpYhat - BY); bpGrad = bpG1 * BX; bpPhase = 'backward';
+    } else {
+      bpOldW = bpW; bpW = bpW - LR * bpGrad; bpRound++; bpPhase = 'update';
+      const tb = $('#bp-rows');
+      if (bpRound === 1) tb.innerHTML = '';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${bpRound}</td><td>${bf(bpOldW)} → ${bf(bpW)}</td><td>${bf(bpYhat)}</td><td>${bf(bpLoss)}</td>`;
+      tb.appendChild(tr);
+      tb.parentElement.parentElement.scrollTop = 1e6;
+    }
+    bpRender();
+  }
+  function bpStop() { clearInterval(bpTimer); bpTimer = null; $('#bp-train').textContent = 'Train 10 rounds'; $('#bp-next').disabled = false; }
+  function bpReset() {
+    bpStop();
+    bpW = 100; bpPhase = 'ready'; bpYhat = bpLoss = bpG1 = bpGrad = bpOldW = null; bpRound = 0;
+    $('#bp-rows').innerHTML = '<tr><td colspan="4" style="text-align:left;color:var(--muted)">No rounds yet</td></tr>';
+    bpRender();
+  }
+  $('#bp-next').addEventListener('click', bpNext);
+  $('#bp-reset').addEventListener('click', bpReset);
+  $('#bp-train').addEventListener('click', () => {
+    if (bpTimer) { bpStop(); return; }
+    const target = bpRound + 10;
+    if (reduceMotion) { while (bpRound < target) bpNext(); return; }
+    $('#bp-train').textContent = 'Pause'; $('#bp-next').disabled = true;
+    bpTimer = setInterval(() => { bpNext(); if (bpRound >= target && bpPhase === 'update') bpStop(); }, 220);
+  });
+  bpReset();
+  hooks.s21b = { leave: bpStop };
+
+  /* ================= Slide 21c: deep network animation ================= */
+  const nn = $('#nn'), nctx = nn.getContext('2d');
+  const NN_IN = ['The', 'capital', 'of', 'Nepal', 'is'];
+  const NN_OUT = [['Kathmandu', .95], ['a', .2], ['located', .16], ['Pokhara', .12]];
+  const NN_L = [5, 10, 12, 12, 12, 10, 4];
+  const FWD = 3.0, HOLD_F = 1.2, BWD = 2.4, HOLD_B = .8, CYCLE = FWD + HOLD_F + BWD + HOLD_B;
+  let nnWts = [], nnAct = [], nnPos = [], nnR = 6, nnWidth = 0, nnHeight = 0, nnFont = 13;
+  let nnClock = 0, nnLast = 0, nnRaf = null, nnPaused = false, nnCycle = -1, nnPhaseShown = '';
+  let nnObserved = false;
+  function nnInitWeights() {
+    nnWts = NN_L.slice(0, -1).map((n, l) => Array.from({ length: n }, () => Array.from({ length: NN_L[l + 1] }, () => Math.random() * 2 - 1)));
+  }
+  function nnNudgeWeights() {
+    nnWts.forEach(g => g.forEach(row => row.forEach((w, j) => { row[j] = Math.max(-1, Math.min(1, w + (Math.random() - .5) * .25)); })));
+  }
+  function nnInitAct() {
+    nnAct = NN_L.map((n, l) => l === 0 ? Array(n).fill(1)
+      : l === NN_L.length - 1 ? NN_OUT.map(o => o[1])
+      : Array.from({ length: n }, () => .15 + .85 * Math.random() ** 1.4));
+  }
+  function nnLayout() {
+    const w = nn.parentElement.getBoundingClientRect().width;
+    if (!w) return;
+    const h = Math.max(200, Math.min(w / (w < 600 ? 1.25 : 2.3), window.innerHeight * .42));
+    const dpr = window.devicePixelRatio || 1;
+    nn.width = Math.round(w * dpr); nn.height = Math.round(h * dpr); nn.style.height = h + 'px';
+    nctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    nnWidth = w; nnHeight = h;
+    nnFont = w < 600 ? 10 : 13;
+    const ml = Math.min(100, w * .19), mr = Math.min(115, w * .22), top = 10, bottom = 30;
+    const usable = h - top - bottom, maxN = Math.max(...NN_L), spacing = usable / maxN;
+    nnR = Math.max(3, Math.min(9, spacing * .3));
+    nnPos = NN_L.map((n, l) => {
+      const x = ml + (w - ml - mr) * l / (NN_L.length - 1);
+      return Array.from({ length: n }, (_, i) => ({ x, y: top + usable / 2 + (i - (n - 1) / 2) * spacing }));
+    });
+  }
+  function nnState(t) {
+    const L1 = NN_L.length - 1;
+    if (t < FWD) return { mode: 'fwd', f: (t / FWD) * L1 };
+    if (t < FWD + HOLD_F) return { mode: 'holdF', f: L1 };
+    if (t < FWD + HOLD_F + BWD) return { mode: 'bwd', f: L1, b: L1 - ((t - FWD - HOLD_F) / BWD) * L1 };
+    return { mode: 'holdB', f: L1 };
+  }
+  function nnSetPhase(mode) {
+    const label = mode === 'bwd' || mode === 'holdB' ? 'bwd' : 'fwd';
+    if (label === nnPhaseShown) return;
+    nnPhaseShown = label;
+    const p = $('#nn-phase');
+    p.className = 'pill ' + (label === 'fwd' ? 'blue' : 'red');
+    p.textContent = label === 'fwd' ? 'Forward: words go in, a prediction comes out' : 'Backward: the error flows back, every weight adjusts a little';
+  }
+  function nnDraw() {
+    if (!nnPos.length) return;
+    const cs = getComputedStyle(document.documentElement);
+    const col = k => cs.getPropertyValue(k).trim();
+    const BLUE = col('--blue'), RED = col('--accent'), FG = col('--fg'), MUTED = col('--muted'), LINE = col('--line'), SURF = col('--surface');
+    const t = reduceMotion ? FWD + .1 : nnClock % CYCLE;
+    const st = nnState(t);
+    nnSetPhase(st.mode);
+    const ctx = nctx, L1 = NN_L.length - 1;
+    ctx.clearRect(0, 0, nnWidth, nnHeight);
+    const lit = l => st.mode === 'fwd' ? Math.max(0, Math.min(1, (st.f - l) * 2.5 + .001)) : 1;
+
+    // connections
+    for (let l = 0; l < L1; l++) {
+      const back = st.mode === 'bwd' && st.b >= l && st.b < l + 1;
+      const backDone = st.mode === 'bwd' && st.b < l;
+      for (let i = 0; i < NN_L[l]; i++) for (let j = 0; j < NN_L[l + 1]; j++) {
+        const w = nnWts[l][i][j], a = nnPos[l][i], b = nnPos[l + 1][j];
+        ctx.strokeStyle = back ? RED : (w > 0 ? BLUE : MUTED);
+        ctx.globalAlpha = back ? .18 + .4 * Math.abs(w) : (backDone ? .12 : .09) + .3 * Math.abs(w) * (st.mode === 'fwd' ? Math.max(.25, lit(l + 1)) : 1);
+        ctx.lineWidth = .4 + Math.abs(w) * 1.1;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+    }
+    // travelling pulses
+    for (let l = 0; l < L1; l++) {
+      let frac = null, color = BLUE;
+      if (st.mode === 'fwd' && st.f >= l && st.f < l + 1) frac = st.f - l;
+      if (st.mode === 'bwd' && st.b >= l && st.b < l + 1) { frac = st.b - l; color = RED; }
+      if (frac === null) continue;
+      ctx.fillStyle = color;
+      for (let i = 0; i < NN_L[l]; i++) for (let j = 0; j < NN_L[l + 1]; j++) {
+        const w = nnWts[l][i][j];
+        if (Math.abs(w) < .5 || (color === BLUE && nnAct[l][i] < .3)) continue;
+        const a = nnPos[l][i], b = nnPos[l + 1][j];
+        ctx.globalAlpha = .35 + .65 * Math.abs(w);
+        ctx.beginPath(); ctx.arc(a.x + (b.x - a.x) * frac, a.y + (b.y - a.y) * frac, 1.6 + Math.abs(w) * 1.2, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    // neurons
+    for (let l = 0; l <= L1; l++) {
+      const on = lit(l);
+      const ring = st.mode === 'bwd' ? Math.max(0, 1 - Math.abs(st.b - l) * 1.6) : 0;
+      nnPos[l].forEach((p, i) => {
+        const act = nnAct[l][i] * on;
+        const isOut = l === L1, hot = isOut && i === 0 ? RED : BLUE;
+        if (act > .05) { ctx.globalAlpha = act * .22; ctx.fillStyle = hot; ctx.beginPath(); ctx.arc(p.x, p.y, nnR * 2.1, 0, Math.PI * 2); ctx.fill(); }
+        ctx.globalAlpha = 1; ctx.fillStyle = SURF; ctx.beginPath(); ctx.arc(p.x, p.y, nnR, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = act; ctx.fillStyle = hot; ctx.fill();
+        ctx.globalAlpha = 1; ctx.lineWidth = ring > 0 ? 2.5 : 1.2; ctx.strokeStyle = ring > 0 ? RED : LINE;
+        if (ring > 0) ctx.globalAlpha = .3 + .7 * ring;
+        ctx.stroke();
+      });
+    }
+    // labels
+    ctx.globalAlpha = 1; ctx.textBaseline = 'middle';
+    ctx.font = `700 ${nnFont + 1}px "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif`;
+    ctx.textAlign = 'right'; ctx.fillStyle = FG;
+    nnPos[0].forEach((p, i) => ctx.fillText(NN_IN[i], p.x - nnR - 8, p.y));
+    ctx.textAlign = 'left';
+    const outOn = lit(L1);
+    nnPos[L1].forEach((p, i) => {
+      ctx.globalAlpha = outOn * (i === 0 ? 1 : .55);
+      ctx.fillStyle = i === 0 ? RED : MUTED;
+      ctx.font = `${i === 0 ? 800 : 400} ${nnFont + (i === 0 ? 3 : 0)}px "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif`;
+      ctx.fillText(NN_OUT[i][0], p.x + nnR + 8, p.y);
+    });
+    // layer captions
+    ctx.globalAlpha = 1; ctx.fillStyle = MUTED; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.font = `600 ${nnFont - 1}px "JetBrains Mono", ui-monospace, Consolas, monospace`;
+    const yCap = nnHeight - 8, x0 = nnPos[0][0].x, x1 = nnPos[1][0].x, xN1 = nnPos[L1 - 1][0].x, xN = nnPos[L1][0].x;
+    ctx.fillText('INPUT', x0, yCap);
+    ctx.fillText('OUTPUT', xN, yCap);
+    ctx.fillText(`HIDDEN LAYERS (${L1 - 1})`, (x1 + xN1) / 2, yCap);
+    ctx.strokeStyle = LINE; ctx.lineWidth = 1.5; ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.moveTo(x1, yCap - 16); ctx.lineTo(x1, yCap - 12); ctx.lineTo(xN1, yCap - 12); ctx.lineTo(xN1, yCap - 16); ctx.stroke();
+  }
+  function nnFrame(now) {
+    const dt = nnLast ? Math.min(.1, (now - nnLast) / 1000) : 0;
+    nnLast = now;
+    if (!nnPaused) nnClock += dt;
+    const c = Math.floor(nnClock / CYCLE);
+    if (c !== nnCycle) { if (nnCycle >= 0) nnNudgeWeights(); nnCycle = c; nnInitAct(); }
+    nnDraw();
+    nnRaf = requestAnimationFrame(nnFrame);
+  }
+  function nnStart() { if (nnRaf) return; nnLayout(); nnLast = 0; nnRaf = requestAnimationFrame(nnFrame); }
+  function nnStopAnim() { if (nnRaf) cancelAnimationFrame(nnRaf); nnRaf = null; }
+  $('#nn-pause').addEventListener('click', () => {
+    nnPaused = !nnPaused;
+    $('#nn-pause').textContent = nnPaused ? 'Play' : 'Pause';
+  });
+  window.addEventListener('resize', () => { if (nnRaf) nnLayout(); });
+  nnInitWeights(); nnInitAct();
+  if (reduceMotion) $('#nn-pause').hidden = true;
+  hooks.s21c = {
+    enter() {
+      if (!reduceMotion) { nnStart(); return; }
+      nnLayout(); nnDraw();
+      if (!nnObserved) { nnObserved = true; new MutationObserver(nnDraw).observe(document.documentElement, { attributes: true }); }
+    },
+    leave: nnStopAnim
+  };
+
+  /* ================= Slide 23a: AWS architecture ================= */
+  const AWS_STEPS = [
+    { title: 'You open the shop', body: 'A customer types shop.example.com in the browser.' },
+    { title: 'Route 53 finds the address', body: 'Route 53 is AWS’s DNS, the internet’s phone book. It turns shop.example.com into the load balancer’s address.' },
+    { title: 'The load balancer picks a server', body: 'It spreads visitors across servers. If one server crashes, traffic goes to the healthy ones.' },
+    { title: 'Frontend and backend do the work', body: 'The frontend shows the pages. The backend handles login, cart and payments. Both run on EC2 servers in the public subnet.' },
+    { title: 'The database stays private', body: 'Products, users and orders live in the database. The private subnet has no internet access, so only the backend can reach it.' },
+    { title: 'Images come from S3', body: 'Product photos are stored in an S3 bucket. The backend uploads them and browsers load them directly, which keeps the servers light.' }
+  ];
+  const awsSvg = $('#aws');
+  let awsStep = -1;
+  function awsShow(i) {
+    awsStep = Math.max(-1, Math.min(AWS_STEPS.length - 1, i));
+    const on = awsStep + 1;
+    awsSvg.classList.toggle('focus', awsStep >= 0);
+    $$('.n', awsSvg).forEach(el => {
+      const hit = awsStep >= 0 && el.dataset.s.split(' ').includes(String(on));
+      el.classList.toggle('on', hit);
+      if (el.classList.contains('edge')) el.setAttribute('marker-end', hit ? 'url(#awa)' : 'url(#awm)');
+    });
+    if (awsStep < 0) {
+      $('#aws-title').textContent = 'Follow one request through the system';
+      $('#aws-body').textContent = 'What happens when a customer opens an online shop, step by step.';
+    } else {
+      $('#aws-title').textContent = `${on}. ${AWS_STEPS[awsStep].title}`;
+      $('#aws-body').textContent = AWS_STEPS[awsStep].body;
+    }
+    $('#aws-prev').disabled = awsStep < 0;
+    $('#aws-next').disabled = awsStep === AWS_STEPS.length - 1;
+    $('#aws-next').textContent = awsStep < 0 ? 'Follow a request' : 'Next step';
+  }
+  $('#aws-prev').addEventListener('click', () => awsShow(awsStep - 1));
+  $('#aws-next').addEventListener('click', () => awsShow(awsStep + 1));
+  $('#aws-all').addEventListener('click', () => awsShow(-1));
+  awsShow(-1);
+  hooks.s23a = { enter: () => awsShow(-1) };
+
+  /* ================= Start ================= */
+  go(startIdx);
+})();
+</script>
+
+</html>
